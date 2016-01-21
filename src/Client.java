@@ -5,24 +5,33 @@ import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.lang.ClassNotFoundException;
 import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 class Client{
 	public static void main(String[] args) {
 		String host = "127.0.0.1";
 		int port = 8000;
         Socket socket;
         Header h = new Header();
+        String input = "";
         h.type = 100;
-        h.i = new ArrayList<Integer>();
-        h.i.add(0);
-        h.i.add(40);
-        h.i.add(30);
-        h.i.add(20);
-        h.i.add(10);
         try{
         	socket = new Socket( host, port );
         	try{
+                        try{
+                                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                                input = br.readLine();
+                        }catch(IOException io){
+                                io.printStackTrace();
+                        }
+                        h.setOwner(input);
+                        System.out.println(h.getOwner());
         		ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());
         		objectOutput.writeObject(h);
+
+
+                        while(true){
+                        }
         	}catch(IOException yee){
         		System.out.println("write fail");
         	}

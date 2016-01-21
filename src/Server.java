@@ -6,31 +6,25 @@ import java.io.IOException;
 import java.lang.ClassNotFoundException;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.lang.Thread;
 class Server extends Thread{
-	HashMap<Integer,ArrayList<Header> > workQueue;
-	HashMap<Integer,ArrayList<Header> >	dataQueue;
-
+	
 	public static void main(String[] args) {
-		this.workQueue = new HashMap<Integer,ArrayList<Header> >();
-		this.dataQueue = new HashMap<Integer,ArrayList<Header> >();
+		HashMap<Integer,ArrayList<Header> > workQueue;
+		HashMap<Integer,ArrayList<Header> >	dataQueue;
+		HashMap<String,Socket> socket_map;
+		workQueue = new HashMap<Integer,ArrayList<Header> >();
+		dataQueue = new HashMap<Integer,ArrayList<Header> >();
+		socket_map = new HashMap<String,Socket>();
 		ServerSocket socket;
 		try{
 			socket = new ServerSocket(8000);
 			while(true){
+				System.out.println("try");
 				try{
 					Socket temp_socket = socket.accept();
-					try{
-						System.out.println("accept success");
-						ObjectInputStream inputstream = new ObjectInputStream(temp_socket.getInputStream());
-						try{
-							Header temp_h = (Header) inputstream.readObject();
-							System.out.println(temp_h.type);
-						}catch(ClassNotFoundException a){
-							System.out.println(",....");
-						}
-					}catch(IOException ex){
-						System.out.println("socket GG");
-					}
+					RequestThread r = new RequestThread(temp_socket,dataQueue,socket_map);
+					r.start();
 				}catch(IOException e){
 					System.out.println("shit happened");
 				}
@@ -40,38 +34,5 @@ class Server extends Thread{
 		}
 	}
 
-	public ForwardThread implements Runnalbe{
-		HashMap<Integer,ArrayList<Header> >	dataQueue;
-		private Socket socket;
-		ForwardThread(Socket socket,HashMap<Integer,ArrayList<Header> > dataQueue,HashMap<Integer,ArrayList<Header> > workQueue){
-			this.socket = socket;
-			this.dataQueue = dataQueue;
-		}
-		public void run(){
-			while(true){
-				
-			}
-		}
-	}
-
-	public RequestThread implements Runnalbe{
-		private Socket socket;
-		HashMap<Integer,ArrayList<Header> > workQueue;
-		RequestThread(Socket socket,HashMap<Integer,ArrayList<Header> > workQueue){
-			this.socket = socket;
-			this.workQueue = workQueue;
-		}
-		public void run(){
-			while(true){
-				ObjectInputStream inputstream = new ObjectInputStream(temp_socket.getInputStream());
-				try{
-					Header temp_h = (Header) inputstream.readObject();
-					ArrayList<Header> temp_list = workQueue.get(temp_h.room);
-					temp_list.add(temp_h);
-				}catch(ClassNotFoundException e){
-					System.out.println("in thread,class not found");
-				}
-			}
-		}
-	}
+	
 }
