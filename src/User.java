@@ -2,6 +2,11 @@ class User{
 	private String username;
 	private String password;
 	int lastshowup;
+	ArrayList<Integer> roomlist;
+
+	public void addroom(int i){
+		this.roomlist.add(i);
+	}
 
 	public void setUsername(String s){
 		this.username = s;
@@ -25,9 +30,11 @@ class User{
 	}
 	User(String username){
 		this.username = username;
+		this.roomlist = new ArrayList<Integer>();
 	}
 	User(String username,String password){
 		this.username = username;
 		this.password = password;
+		this.roomlist = new ArrayList<Integer>();
 	}
 }

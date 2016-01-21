@@ -13,9 +13,12 @@ class Server extends Thread{
 		HashMap<String,User> userData;
 		HashMap<Integer,ArrayList<Header> >	dataQueue;
 		HashMap<String,Socket> socket_map;
+		HashMap<Integer,ArrayList<String>> chatroom_list;
 		userData = new HashMap<String,User>();
 		dataQueue = new HashMap<Integer,ArrayList<Header> >();
 		socket_map = new HashMap<String,Socket>();
+		dataQueue.put(0,new ArrayList<Header>());
+		chatroom_list = new HashMap<Integer,ArrayList<String>>();
 		ServerSocket socket;
 		try{
 			socket = new ServerSocket(8000);
@@ -23,7 +26,7 @@ class Server extends Thread{
 				System.out.println("try");
 				try{
 					Socket temp_socket = socket.accept();
-					RequestThread r = new RequestThread(temp_socket,dataQueue,socket_map,userData);
+					RequestThread r = new RequestThread(temp_socket,dataQueue,socket_map,userData,chatroom_list);
 					r.start();
 				}catch(IOException e){
 					System.out.println("shit happened");

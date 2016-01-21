@@ -11,11 +11,13 @@ public class RequestThread extends Thread{
 		HashMap<Integer,ArrayList<Header> > dataQueue;
 		HashMap<String,Socket> socket_map;
 		HashMap<String,User> userData;
-		RequestThread(Socket socket,HashMap<Integer,ArrayList<Header> > dataQueue,HashMap<String,Socket> socket_map,HashMap<String,User> userData){
+		HashMap<Integer,ArrayList<String>> chatroom_list;
+		RequestThread(Socket socket,HashMap<Integer,ArrayList<Header> > dataQueue,HashMap<String,Socket> socket_map,HashMap<String,User> userData,HashMap<Integer,ArrayList<String>> chatroom_list){
 			this.socket = socket;
 			this.dataQueue = dataQueue;
 			this.socket_map = socket_map;
 			this.userData = userData;
+			this.chatroom_list = chatroom_list;
 		}
 		public void run(){
 			ObjectInputStream inputstream;
@@ -97,14 +99,14 @@ public class RequestThread extends Thread{
 									}catch(IOException msgnouser){}
 								}
 							}else if(temp_h.getType() == Command.SEND_MSG_CHAT){
-								ArrayList<User> temp_userlist;
-								temp_userlist = temp_h.userlist;
-								Iterator temp_it_user = temp_userlist.iterator();
-								while(temp_it_user.hasNext()){
-									User temp_user;
-									temp_user = temp_it_user.next();
-									if(socket_map.containsKey(temp_user.getUsername()) == true){
-										temp_socket = socket_map.get(temp_user.getUsername());
+								ArrayList<String> chat_user;
+								chat_user = userlist.get(temp_h.getRoom());
+								Iterator<String> temp_it_user_string = chat_user.iterator();
+								while(temp_it_user_string.hasNext()){
+									String temp_user_string;
+									temp_user_string = temp_it_user_string.next();
+									if(socket_map.containsKey(temp_user_string) == true){
+										temp_socket = socket_map.get(temp_user_string);
 										if(temp_socket.isClosed() == false){
 											try{
 												objectOutput = new ObjectOutputStream(temp_socket.getOutputStream());
@@ -122,15 +124,18 @@ public class RequestThread extends Thread{
 								temp_list.add(temp_h);
 							}else if(temp_h.getType() == Command.INIT_CHAT){
 								temp_h.setRoom(chatroom);
+								userlist.put(chatroom,new ArrayList<String>());
+								ArrayList<String> chat_user = userlist.get.(chatroom);
 								dataQueue.put(temp_h.getRoom(),new ArrayList<Header>());
 								chatroom++;
 								ArrayList<User> temp_userlist;
 								temp_userlist = temp_h.userlist;
-								Iterator temp_it_user = temp_userlist.iterator();
+								Iterator<User> temp_it_user = temp_userlist.iterator();
 								while(temp_it_user.hasNext()){
 									User temp_user;
 									temp_user = temp_it_user.next();
-									if(socket_map.containsKey(temp_user.getUsername()) == true){
+									chat_user.add(temp_user.getUsername());
+							/*		if(socket_map.containsKey(temp_user.getUsername()) == true){
 										temp_socket = socket_map.get(temp_user.getUsername());
 										if(temp_socket.isClosed() == false){
 											try{
@@ -140,10 +145,49 @@ public class RequestThread extends Thread{
 										}else{
 											//user not online
 										}
+									}*/ // init chat and do what?
+								}
+					/*			temp_list = dataQueue.get(temp_h.getRoom());
+								temp_list.add(temp_h);*/
+							}else if(temp_h.getType() == Command.CHAT_ADD){
+								ArrayList<String> chat_user = userlist.get.(temp_h.getRoom());
+								ArrayList<User> temp_userlist;
+								temp_userlist = temp_h.userlist;
+								Iterator temp_it_user = temp_userlist.iterator();
+								while(temp_it_user.hasNext()){
+									User temp_user;
+									temp_user = temp_it_user.next();
+									chat_user.add(temp_user.getUsername());
+								}
+							}else if(temp_h.getType() == Command.MSG_SYNC){
+								ArrayList<Header> temp_msg;
+								if(dataQueue.containsKey(0) == true){
+									temp_msg = dataQueue.get(0);
+									Iterator<Header> temp_it_header = temp_msg.iterator();
+									while(temp_it_header.hasNext()){
+										Header temp_header = temp_it_header.next();
+										String temp_string = temp_h.getOwner();
+										if(temp_string.equals(temp_header.getOwner()) == true || temp_string.equals(temp_header.getReceiver()) == true){
+											try{
+												objectOutput = new ObjectOutputStream(socket.getOutputStream());
+												objectOutput.writeObject(temp_header);
+											}catch(IOException syncs){}
+										}
 									}
 								}
-								temp_list = dataQueue.get(temp_h.getRoom());
-								temp_list.add(temp_h);
+							}else if(temp_h.getType() == Command.CHAT_SYNC){
+								ArrayList<Header> temp_chat;
+								if(dataQueue.containsKey(temp_h.getRoom()) == true){
+									temp_chat = dataQueue.get(temp_h.getRoom());
+									Iterator<Header> temp_it_header = temp_chat.iterator();
+									while(temp_it_header.hasNext()){
+										Header temp_header = temp_it_header.next();
+										try{
+											objectOutput = new ObjectOutputStream(socket.getOutputStream());
+											objectOutput.writeObject(temp_header);
+										}catch(IOException chatsyncs){}
+									}
+								}
 							}
 					}catch(ClassNotFoundException e){
 						System.out.println("in thread,class not found");
