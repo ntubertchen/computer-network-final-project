@@ -2,6 +2,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.awt.Toolkit;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.io.IOException;
 import java.awt.*;
 /*
@@ -138,6 +139,9 @@ public class LoginFrame extends javax.swing.JFrame {
           close();
           MessagerGUI m = new MessagerGUI();
           m.setVisible(true);
+          Curinfo c = temp_h.c;
+          User temp_user = temp_h.getUser();
+          ArrayList<Integer> roomlist = temp_user.roomlist;
         }else if(temp_h.getType() == Command.FAILURE_LOG){
           warning w = new warning();
           warning.setText("Wrong username or password, please try again.");
