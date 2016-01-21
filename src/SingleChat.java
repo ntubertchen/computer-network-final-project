@@ -39,7 +39,7 @@ public class SingleChat extends javax.swing.JFrame {
         MessageView = new javax.swing.JTextArea();
         SendButton = new javax.swing.JButton();
         NewFileButton = new javax.swing.JButton();
-        ChatroomButton = new javax.swing.JButton();
+        HistoryButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Messenger");
@@ -71,10 +71,10 @@ public class SingleChat extends javax.swing.JFrame {
             }
         });
 
-        ChatroomButton.setText("History");
-        ChatroomButton.addActionListener(new java.awt.event.ActionListener() {
+        HistoryButton.setText("History");
+        HistoryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ChatroomButtonActionPerformed(evt);
+                HistoryButtonActionPerformed(evt);
             }
         });
 
@@ -92,7 +92,7 @@ public class SingleChat extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(NewFileButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ChatroomButton))
+                        .addComponent(HistoryButton))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)))
@@ -106,7 +106,7 @@ public class SingleChat extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(NewFileButton)
-                    .addComponent(ChatroomButton))
+                    .addComponent(HistoryButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TypeField, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -146,8 +146,10 @@ public class SingleChat extends javax.swing.JFrame {
         s.setVisible(true);
     }
 
-    private void ChatroomButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void HistoryButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        History s = new History();
+        s.setVisible(true);
     }
 
     /**
@@ -186,7 +188,7 @@ public class SingleChat extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify
-    private javax.swing.JButton ChatroomButton;
+    private javax.swing.JButton HistoryButton;
     private javax.swing.JTextArea MessageView;
     private javax.swing.JButton NewFileButton;
     private javax.swing.JButton SendButton;
