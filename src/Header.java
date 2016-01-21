@@ -5,6 +5,20 @@ class Header implements Serializable{
 	private String owner,receiver;
 	private String msg;
 	private int room;
+	private User u;
+	ArrayList<User> userlist;
+	public void add(User u){
+		this.userlist.add(u);
+	}
+	public int getType(){
+		return this.type;
+	}
+	public User getUser(){
+		return this.u;
+	}
+	public void setType(int i){
+		this.type = i;
+	}
 	public void setRoom(int i){
 		this.room = i;
 	}
@@ -29,5 +43,7 @@ class Header implements Serializable{
 	public String getMsg(){
 		return this.msg;
 	}
-	Header(){}
+	Header(){
+		this.userlist = new ArrayList<User>();
+	}
 }

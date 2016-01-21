@@ -13,6 +13,16 @@ public class Command{
 					 SEND_MSG_CHAT_ACK = 7,
 					 SEND_FILE_CHAT = 8,
 					 SEND_FILE_CHAT_ACK = 9;
+	static final int FAILURE_REG = 10,
+					 SUCCESS_REG = 11,
+					 SUCCESS_LOG = 12,
+					 FAILURE_LOG = 13,
+					 SUCCESS_MSG = 14,
+					 FAILURE_MSG = 15,
+					 NOSUCHUSER = 16,
+					 INIT_CHAT = 17,
+
+
 	//chat room 0 for conversion
 	//other number for multiple serverice
 }

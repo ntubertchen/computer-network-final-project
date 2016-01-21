@@ -10,10 +10,10 @@ import java.lang.Thread;
 class Server extends Thread{
 	
 	public static void main(String[] args) {
-		HashMap<Integer,ArrayList<Header> > workQueue;
+		HashMap<String,User> userData;
 		HashMap<Integer,ArrayList<Header> >	dataQueue;
 		HashMap<String,Socket> socket_map;
-		workQueue = new HashMap<Integer,ArrayList<Header> >();
+		userData = new HashMap<String,User>();
 		dataQueue = new HashMap<Integer,ArrayList<Header> >();
 		socket_map = new HashMap<String,Socket>();
 		ServerSocket socket;
@@ -23,7 +23,7 @@ class Server extends Thread{
 				System.out.println("try");
 				try{
 					Socket temp_socket = socket.accept();
-					RequestThread r = new RequestThread(temp_socket,dataQueue,socket_map);
+					RequestThread r = new RequestThread(temp_socket,dataQueue,socket_map,userData);
 					r.start();
 				}catch(IOException e){
 					System.out.println("shit happened");
@@ -33,6 +33,4 @@ class Server extends Thread{
 			System.out.println("server failure");
 		}
 	}
-
-	
 }
