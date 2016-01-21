@@ -103,11 +103,13 @@ public class MessagerGUI extends javax.swing.JFrame {
 
     private void ChatroomButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        FriendSelection f = new FriendSelection();
+        f.setVisible(true);
     }
 
     private void FriendListValueChanged(javax.swing.event.ListSelectionEvent evt) {
         // TODO add your handling code here:
-        if (evt.getValueIsAdjusting() == false) {
+        // if (evt.getValueIsAdjusting() == false) {
             if (FriendList.getSelectedIndex() == -1) {
             //No selection, disable fire button.
                 StartTalkButton.setEnabled(false);
@@ -115,15 +117,20 @@ public class MessagerGUI extends javax.swing.JFrame {
             //Selection, enable the fire button.
                 StartTalkButton.setEnabled(true);
             }
-        }
+        // }
     }
     // public void valueChanged(ListSelectionEvent e) {
     //
     // }
     private void StartTalkButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        // if(FriendList.isSelectionEmpty()){
+        //   StartTalkButton.setEnabled(false);
+        // }else{
+        //   StartTalkButton.setEnabled(true);
+        // }
         singleChat s = new singleChat();
-        s.setTitle(FriendList.getSelectedValue());
+        s.setTitle(FriendList.getSelectedIndex() + FriendList.getSelectedValue());
         s.setVisible(true);
     }
 
