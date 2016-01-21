@@ -135,7 +135,11 @@ public class LoginFrame extends javax.swing.JFrame {
         MessagerGUI m = new MessagerGUI();
         m.setVisible(true);
     }
-
+    public void reaction(Header temp_h){
+        if(type == Command.SUCCESS_LOG || type == Command.SUCCESS_REG){
+            
+        }
+    }
     private void SignupButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         String name = userField.getText();
