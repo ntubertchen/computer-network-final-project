@@ -6,7 +6,7 @@ class Header implements Serializable{
 	private String msg;
 	private int room;
 	private User u;
-	ArrayList<User> userlist;
+	ArrayList<String> userlist;
 	Curinfo c;
 	int filesize;
 	public void setCurinfo(Curinfo c){
@@ -14,9 +14,6 @@ class Header implements Serializable{
 	}
 	public Curinfo getCurinfo(){
 		return this.c;
-	}
-	public void add(User u){
-		this.userlist.add(u);
 	}
 	public int getType(){
 		return this.type;
@@ -55,6 +52,6 @@ class Header implements Serializable{
 		return this.msg;
 	}
 	Header(){
-		this.userlist = new ArrayList<User>();
+		this.userlist = new ArrayList<String>();
 	}
 }

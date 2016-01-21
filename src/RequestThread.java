@@ -158,23 +158,23 @@ public class RequestThread extends Thread{
 								ArrayList<String> chat_user = chatroom_list.get(chatroom);
 								dataQueue.put(temp_h.getRoom(),new ArrayList<Header>());
 								chatroom++;
-								ArrayList<User> temp_userlist;
+								ArrayList<String> temp_userlist;
 								temp_userlist = temp_h.userlist;
-								Iterator<User> temp_it_user = temp_userlist.iterator();
+								Iterator<String> temp_it_user = temp_userlist.iterator();
 								while(temp_it_user.hasNext()){
-									User temp_user;
+									String temp_user;
 									temp_user = temp_it_user.next();
-									chat_user.add(temp_user.getUsername());
+									chat_user.add(temp_user);
 								}
 							}else if(temp_h.getType() == Command.CHAT_ADD){
 								ArrayList<String> chat_user = chatroom_list.get(temp_h.getRoom());
-								ArrayList<User> temp_userlist;
+								ArrayList<String> temp_userlist;
 								temp_userlist = temp_h.userlist;
-								Iterator<User> temp_it_user = temp_userlist.iterator();
+								Iterator<String> temp_it_user = temp_userlist.iterator();
 								while(temp_it_user.hasNext()){
-									User temp_user;
+									String temp_user;
 									temp_user = temp_it_user.next();
-									chat_user.add(temp_user.getUsername());
+									chat_user.add(temp_user);
 								}
 							}else if(temp_h.getType() == Command.MSG_SYNC){
 								ArrayList<Header> temp_msg;
@@ -225,6 +225,36 @@ public class RequestThread extends Thread{
 							    	}
 							    }else{
 							    }
+							}else if(temp_h.getType() == Command.SEND_FILE_CHAT){
+								byte [] bytearray = new byte[temp_h.filesize];
+								InputStream is = socket.getInputStream();
+								int current,bytesRead;
+								bytesRead = is.read(bytearray,0,bytearray.length);
+							    current = bytesRead;
+							    do{
+							        bytesRead = is.read(bytearray, current, (bytearray.length-current));
+							        if(bytesRead >= 0) current += bytesRead;
+							    }while(bytesRead > -1);
+							    ArrayList<String> chat_user;
+								chat_user = chatroom_list.get(temp_h.getRoom());
+								Iterator<String> temp_it_user_string = chat_user.iterator();
+								while(temp_it_user_string.hasNext()){
+									String temp_user_string;
+									temp_user_string = temp_it_user_string.next();
+									if(socket_map.containsKey(temp_user_string) == true){
+										temp_socket = socket_map.get(temp_user_string);
+										if(temp_socket.isClosed() == false){
+											OutputStream outputstream;
+							    			outputstream = socket.getOutputStream();
+								        	outputstream.write(bytearray,0,bytearray.length);
+								        	outputstream.flush();
+										}else{
+											//user not online
+										}
+									}else{
+										//user not exist(not happening)
+									}
+								}
 							}else if(temp_h.getType() == Command.KNOCKING){
 								try{
 									Header success = new Header();
