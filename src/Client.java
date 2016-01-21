@@ -9,50 +9,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 class Client{
 	public static void main(String[] args) {
-		String host = "127.0.0.1";
-		int port = 8000;
-        Socket socket;
         Header h = new Header();
-        String input = "";
-        try{
-        	socket = new Socket( host, port );
-        	try{
-                       /* try{
-                                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                                input = br.readLine();
-                        }catch(IOException io){
-                                io.printStackTrace();
-                        }
-                        System.out.println("owner");
-                        h.setOwner(input);
-                        try{
-                                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                                input = br.readLine();
-                                System.out.println("receiver");
-                        }catch(IOException io){
-                                io.printStackTrace();
-                        }*/
-                        User u = new User("name","password");
-                        h.setUser(u);
-                        h.setType(Command.LOGIN);
-                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());
-                        objectOutput.writeObject(h);
-                        System.out.println("after send");
-                        while(true){
-                        }
-        	}catch(IOException yee){
-        		System.out.println("write fail");
-        	}
-        }catch(IOException e){
-        	System.out.println("socket GG");
-        }
-	}
-}
-import java.lang.Thread;
-import java.io.IOException;
-import java.net.Socket;
-class test{
-    public static void main(String[] args) {
         LoginFrame l = new LoginFrame();
         Socket socket = new Socket();
         String host = "127.0.0.1";
@@ -62,5 +19,16 @@ class test{
         }catch(IOException e){}
         l.setSocket(socket);
         l.run();
-    }
+        while(true){
+            ObjectInputStream inputstream;
+            try{
+                Header temp_h;
+                inputstream = new ObjectInputStream(socket.getInputStream());
+                try{
+                    temp_h = (Header) inputstream.readObject();
+                }catch(ClassNotFoundException a){}
+            }catch(IOException e){}
+            l.reaction(temp_h);
+        }
+	}
 }
