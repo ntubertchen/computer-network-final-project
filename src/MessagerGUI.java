@@ -34,20 +34,24 @@ public class MessagerGUI extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         onlineList = new javax.swing.JList<>();
-        ChatroomButton = new javax.swing.JButton();
-        StartTalkButton = new javax.swing.JButton();
+        chatroomButton = new javax.swing.JButton();
+        onlineButton = new javax.swing.JButton();
         onlineLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         offlineList = new javax.swing.JList<>();
         offlineLabel = new javax.swing.JLabel();
-
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        chatroomHistoryList = new javax.swing.JList<>();
+        chatroomHistoryLabel = new javax.swing.JLabel();
+        offlineButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Messenger");
         setBackground(new java.awt.Color(255, 255, 255));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
 
         // onlineList.setModel(new javax.swing.AbstractListModel<String>() {
         //     String[] strings;
@@ -63,17 +67,17 @@ public class MessagerGUI extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(onlineList);
 
-        ChatroomButton.setText("Start a Chatroom");
-        ChatroomButton.addActionListener(new java.awt.event.ActionListener() {
+        chatroomButton.setText("Invite friends");
+        chatroomButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ChatroomButtonActionPerformed(evt);
+                chatroomButtonActionPerformed(evt);
             }
         });
 
-        StartTalkButton.setText("Start to talk");
-        StartTalkButton.addActionListener(new java.awt.event.ActionListener() {
+        onlineButton.setText("Start to talk");
+        onlineButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                StartTalkButtonActionPerformed(evt);
+                onlineButtonActionPerformed(evt);
             }
         });
 
@@ -87,104 +91,101 @@ public class MessagerGUI extends javax.swing.JFrame {
         jScrollPane2.setViewportView(offlineList);
 
         offlineLabel.setText("Offline");
+        chatroomHistoryList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane3.setViewportView(chatroomHistoryList);
+
+        chatroomHistoryLabel.setText("Chatroom history");
+
+        offlineButton.setText("Offline Message");
+
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(ChatroomButton)
-                                .addGap(0, 11, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(offlineLabel)
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(59, 59, 59)
-                                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(27, 27, 27)
-                                .addComponent(StartTalkButton)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(onlineLabel))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(61, 61, 61)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(onlineButton)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                        .addComponent(offlineLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane1))
+                    .addComponent(onlineLabel)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chatroomButton)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chatroomHistoryLabel)
+                    .addComponent(offlineButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(ChatroomButton)
-                .addGap(2, 2, 2)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(chatroomHistoryLabel)
+                .addGap(1, 1, 1)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chatroomButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(onlineLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(StartTalkButton)
+                .addComponent(onlineButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
                 .addComponent(offlineLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(offlineButton))
         );
 
         pack();
-    }// </editor-fold>                        
+    }// </editor-fold>             
 
-
-    private void ChatroomButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    private void chatroomButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
         
         // TODO add your handling code here:
         FriendSelection f = new FriendSelection();
         f.setVisible(true);
     }                                              
 
-    private void StartTalkButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
+    private void onlineButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
         
         // TODO add your handling code here:
         // if (evt.getValueIsAdjusting() == false) {
             if (onlineList.getSelectedIndex() == -1) {
             //No selection, disable fire button.
-                StartTalkButton.setEnabled(false);
+                onlineButton.setEnabled(false);
             } else {
             //Selection, enable the fire button.
-                StartTalkButton.setEnabled(true);
+                onlineButton.setEnabled(true);
             }
         // }
-        singleChat s = new singleChat();
+        SingleChat s = new SingleChat();
         s.setTitle(onlineList.getSelectedValue());
         s.setVisible(true);
     }                                               
 
     private void onlineListValueChanged(javax.swing.event.ListSelectionEvent evt) {                                        
         // TODO add your handling code here:
-        // TODO add your handling code here:
-        if(onlineList.isSelectionEmpty()){
-          StartTalkButton.setEnabled(false);
-        }else{
-          StartTalkButton.setEnabled(true);
+        if (onlineList.getSelectedIndex() == -1) {
+        //No selection, disable fire button.
+            onlineButton.setEnabled(false);
+        } else {
+        //Selection, enable the fire button.
+            onlineButton.setEnabled(true);
         }
         
     }                                       
@@ -225,14 +226,18 @@ public class MessagerGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify                     
-    private javax.swing.JButton ChatroomButton;
-    private javax.swing.JButton StartTalkButton;
+    private javax.swing.JButton chatroomButton;
+    private javax.swing.JLabel chatroomHistoryLabel;
+    private javax.swing.JList<String> chatroomHistoryList;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JButton offlineButton;
     private javax.swing.JLabel offlineLabel;
     private javax.swing.JList<String> offlineList;
+    private javax.swing.JButton onlineButton;
     private javax.swing.JLabel onlineLabel;
     private javax.swing.JList<String> onlineList;
     // End of variables declaration                   
