@@ -33,12 +33,12 @@ public class MessagerGUI extends javax.swing.JFrame {
     private void initComponents(Curinfo c) {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        onlineList = new javax.swing.JList(c.curonline.toArray());
+        onlineList = new javax.swing.JList<>();
         ChatroomButton = new javax.swing.JButton();
         StartTalkButton = new javax.swing.JButton();
         onlineLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        offlineList = new javax.swing.JList(c.curoffline.toArray());
+        offlineList = new javax.swing.JList<>();
         offlineLabel = new javax.swing.JLabel();
 
         jSeparator1 = new javax.swing.JSeparator();

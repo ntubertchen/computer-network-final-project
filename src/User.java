@@ -1,5 +1,6 @@
 import java.util.ArrayList;
-class User{
+import java.io.Serializable;
+class User implements Serializable{
 	private String username;
 	private String password;
 	int lastshowup;

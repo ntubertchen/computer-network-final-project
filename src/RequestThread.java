@@ -55,9 +55,10 @@ public class RequestThread extends Thread{
 									try{
 										Header success = new Header();
 										success.setType(Command.SUCCESS_REG);
+										success.setUser(null);
 										objectOutput = new ObjectOutputStream(socket.getOutputStream());
 										objectOutput.writeObject(success);
-									}catch(IOException regs){}
+									}catch(IOException regs){System.out.println("SUCCESS_REG failure");}
 								}
 							}else if(temp_h.getType() == Command.LOGIN){
 								User u = temp_h.getUser();
@@ -276,6 +277,8 @@ public class RequestThread extends Thread{
 									objectOutput = new ObjectOutputStream(socket.getOutputStream());
 									objectOutput.writeObject(success);
 								}catch(IOException logs){}
+							}else if(temp_h.getType() == 110){
+								System.out.println(temp_h.getReceiver());
 							}
 					}catch(ClassNotFoundException e){
 						System.out.println("in thread,class not found");

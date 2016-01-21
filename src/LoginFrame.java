@@ -3,6 +3,7 @@ import java.net.Socket;
 import java.awt.Toolkit;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.io.ObjectInputStream;
 import java.io.IOException;
 import java.awt.*;
 /*
@@ -128,19 +129,33 @@ public class LoginFrame extends javax.swing.JFrame {
         h.setUser(u);
         h.setType(Command.LOGIN);
         ObjectOutputStream objectOutput;
+        if(socket.isConnected() == true)
+            System.out.println("true");
         try{
             objectOutput = new ObjectOutputStream(socket.getOutputStream());
             objectOutput.writeObject(h);
-        }catch(IOException reg){}
-
+        }catch(IOException reg){
+            System.out.println("login FAILURE_REG");
+        }
+        try{
+            ObjectInputStream inputstream;
+            inputstream = new ObjectInputStream(socket.getInputStream());
+            try{
+                Header temp_h;
+                temp_h = (Header) inputstream.readObject();
+                reaction(temp_h);
+            }catch(ClassNotFoundException aaaa){}
+        }catch(IOException aaa){}
     }
     public void reaction(Header temp_h){
         if(temp_h.getType() == Command.SUCCESS_LOG || temp_h.getType() == Command.SUCCESS_REG){
           close();
           Curinfo c = temp_h.c;
           MessagerGUI m = new MessagerGUI(c);
-          User temp_user = temp_h.getUser();
-          ArrayList<Integer> roomlist = temp_user.roomlist;
+          if(temp_h.getUser() != null){
+              User temp_user = temp_h.getUser();
+              ArrayList<Integer> roomlist  = temp_user.roomlist;
+          }
           m.setVisible(true);
         }else if(temp_h.getType() == Command.FAILURE_LOG){
           Warning w = new Warning("Wrong username or password, please try again.");
@@ -162,7 +177,18 @@ public class LoginFrame extends javax.swing.JFrame {
         try{
             objectOutput = new ObjectOutputStream(socket.getOutputStream());
             objectOutput.writeObject(h);
-        }catch(IOException reg){}
+        }catch(IOException reg){
+            System.out.println("reg FAILURE_REG");
+        }
+        try{
+            ObjectInputStream inputstream;
+            inputstream = new ObjectInputStream(socket.getInputStream());
+            try{
+                Header temp_h;
+                temp_h = (Header) inputstream.readObject();
+                reaction(temp_h);
+            }catch(ClassNotFoundException aaaa){}
+        }catch(IOException aaa){}
     }
     /**
      * @param args the command line arguments

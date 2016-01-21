@@ -1,5 +1,6 @@
 import java.util.ArrayList;
-class Curinfo{
+import java.io.Serializable;
+class Curinfo implements Serializable{
 	ArrayList<String> curonline;
 	ArrayList<String> curoffline;
 	Curinfo(){

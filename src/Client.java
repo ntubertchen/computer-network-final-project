@@ -14,11 +14,10 @@ class Client{
         Socket socket;
         Header h = new Header();
         String input = "";
-        h.type = 100;
         try{
         	socket = new Socket( host, port );
         	try{
-                        try{
+                       /* try{
                                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
                                 input = br.readLine();
                         }catch(IOException io){
@@ -32,9 +31,10 @@ class Client{
                                 System.out.println("receiver");
                         }catch(IOException io){
                                 io.printStackTrace();
-                        }
-                        h.setReceiver(input);
-                		h.setType(110);
+                        }*/
+                        User u = new User("name","password");
+                        h.setUser(u);
+                        h.setType(Command.LOGIN);
                         ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());
                         objectOutput.writeObject(h);
                         System.out.println("after send");

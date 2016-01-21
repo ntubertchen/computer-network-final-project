@@ -53,5 +53,6 @@ class Header implements Serializable{
 	}
 	Header(){
 		this.userlist = new ArrayList<String>();
+		this.c = new Curinfo();
 	}
 }
