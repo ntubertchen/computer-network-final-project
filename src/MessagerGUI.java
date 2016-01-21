@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 
+import java.util.ArrayList;
+import javax.swing.JList;
 /**
  *
  * @author yuchiang
@@ -13,10 +15,14 @@ public class MessagerGUI extends javax.swing.JFrame {
     /**
      * Creates new form MessagerGUI
      */
-    public MessagerGUI() {
-        initComponents();
+    public MessagerGUI(Curinfo c) {
+        initComponents(c);
     }
 
+    
+    // public ArrayList<String> setOfflineList(ArrayList<String> curoffline){
+    //     offlineList = new Jlist<String>(curoffline.toArray());
+    // }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -24,16 +30,17 @@ public class MessagerGUI extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
-    private void initComponents() {
+    private void initComponents(Curinfo c) {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        onlineList = new javax.swing.JList<>();
+        onlineList = new javax.swing.JList(c.curonline.toArray());
         ChatroomButton = new javax.swing.JButton();
         StartTalkButton = new javax.swing.JButton();
         onlineLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        offlineList = new javax.swing.JList<>();
+        offlineList = new javax.swing.JList(c.curoffline.toArray());
         offlineLabel = new javax.swing.JLabel();
+
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
 
@@ -42,11 +49,12 @@ public class MessagerGUI extends javax.swing.JFrame {
         setBackground(new java.awt.Color(255, 255, 255));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        onlineList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        // onlineList.setModel(new javax.swing.AbstractListModel<String>() {
+        //     String[] strings;
+        //     public int getSize() { return strings.length; }
+        //     public String getElementAt(int i) { return strings[i]; }
+        // }); 
+
         onlineList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         onlineList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -145,6 +153,7 @@ public class MessagerGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>                        
 
+
     private void ChatroomButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
         
         // TODO add your handling code here:
@@ -208,11 +217,11 @@ public class MessagerGUI extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MessagerGUI().setVisible(true);
-            }
-        });
+        // java.awt.EventQueue.invokeLater(new Runnable() {
+        //     public void run() {
+        //         new MessagerGUI(c).setVisible(true);
+        //     }
+        // });
     }
 
     // Variables declaration - do not modify                     

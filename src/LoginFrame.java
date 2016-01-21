@@ -138,10 +138,13 @@ public class LoginFrame extends javax.swing.JFrame {
         if(temp_h.getType() == Command.SUCCESS_LOG || temp_h.getType() == Command.SUCCESS_REG){
           close();
           MessagerGUI m = new MessagerGUI();
-          m.setVisible(true);
+
           Curinfo c = temp_h.c;
           User temp_user = temp_h.getUser();
           ArrayList<Integer> roomlist = temp_user.roomlist;
+          m.setOnlineList(curonline);
+          m.setOfflineList(curonline);
+          m.setVisible(true);
         }else if(temp_h.getType() == Command.FAILURE_LOG){
           warning w = new warning();
           warning.setText("Wrong username or password, please try again.");
