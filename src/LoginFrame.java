@@ -129,8 +129,6 @@ public class LoginFrame extends javax.swing.JFrame {
         h.setUser(u);
         h.setType(Command.LOGIN);
         ObjectOutputStream objectOutput;
-        if(socket.isConnected() == true)
-            System.out.println("true");
         try{
             objectOutput = new ObjectOutputStream(socket.getOutputStream());
             objectOutput.writeObject(h);

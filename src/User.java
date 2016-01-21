@@ -24,6 +24,7 @@ class User implements Serializable{
 		return this.password;
 	}
 	public Boolean check(User u){
+		System.out.println(u.getUsername());
 		if(this.username.equals(u.getUsername()) == true && this.password.equals(u.getUserpassword()) == true){
 			return true;
 		}else{

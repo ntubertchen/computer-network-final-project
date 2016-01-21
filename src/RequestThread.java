@@ -51,18 +51,26 @@ public class RequestThread extends Thread{
 									}catch(IOException reg){}
 								}else{
 									User temp_user = temp_h.getUser();
-									userData.put(temp_user.getUsername(),temp_user);
+									userData.put(temp_user.getUsername(),new User(temp_user.getUsername(),temp_user.getUserpassword()));
+									if(userData.containsKey("123") == true)
+										System.out.println("success put");
 									try{
 										Header success = new Header();
 										success.setType(Command.SUCCESS_REG);
-										success.setUser(null);
+										success.setUser(temp_user);
 										objectOutput = new ObjectOutputStream(socket.getOutputStream());
 										objectOutput.writeObject(success);
 									}catch(IOException regs){System.out.println("SUCCESS_REG failure");}
 								}
 							}else if(temp_h.getType() == Command.LOGIN){
 								User u = temp_h.getUser();
-								if(userData.containsKey(temp_h.getOwner()) == true && u.check(userData.get(temp_h.getOwner())) == true){
+								User k = userData.get(temp_h.getOwner());
+								String tempn,tempu,n,un;
+								n = u.getUsername();
+								un = u.getUserpassword();
+								tempn = k.getUsername();
+								tempu = k.getUserpassword();
+								if(userData.containsKey(temp_h.getOwner()) == true && tempu.equals(un) == true){
 									try{
 										//return user data
 										Header success = new Header();
@@ -87,6 +95,7 @@ public class RequestThread extends Thread{
 										objectOutput.writeObject(success);
 									}catch(IOException logs){}
 								}else{
+									System.out.println("not first time");
 									try{
 										Header failure = new Header();
 										failure.setType(Command.FAILURE_LOG);
