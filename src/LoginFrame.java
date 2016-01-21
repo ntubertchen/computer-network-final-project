@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.IOException;
 import java.lang.Thread;
 import java.awt.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -18,7 +19,8 @@ import java.awt.*;
  * @author yuchiang
  */
 public class LoginFrame extends javax.swing.JFrame implements Runnable{
-    static  Socket socket;
+    static Socket socket;
+    static ConcurrentLinkedQueue<Header> queue;
     /**
      * Creates new form LoginFrame
      */
@@ -138,8 +140,17 @@ public class LoginFrame extends javax.swing.JFrame implements Runnable{
             System.out.println("login FAILURE_REG");
         }
     }
-    public void reaction(Header temp_h){
+    public void setqueue(ConcurrentLinkedQueue<Header> queue){
+        this.queue = queue;
+    }
+    public void reaction(){
+        Header temp_h;
+        temp_h = queue.poll();
+        if(temp_h == null)
+            return;
+        System.out.println(temp_h.getType());
         if(temp_h.getType() == Command.SUCCESS_LOG || temp_h.getType() == Command.SUCCESS_REG){
+          System.out.println("SUCCESS_REG");
           close();
           Curinfo c = temp_h.c;
           MessagerGUI m = new MessagerGUI(c);
