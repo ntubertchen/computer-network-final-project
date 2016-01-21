@@ -131,13 +131,21 @@ public class LoginFrame extends javax.swing.JFrame {
             objectOutput = new ObjectOutputStream(socket.getOutputStream());
             objectOutput.writeObject(h);
         }catch(IOException reg){}
-        close();
-        MessagerGUI m = new MessagerGUI();
-        m.setVisible(true);
+
     }
     public void reaction(Header temp_h){
-        if(type == Command.SUCCESS_LOG || type == Command.SUCCESS_REG){
-                
+        if(temp_h.getType() == Command.SUCCESS_LOG || temp_h.getType() == Command.SUCCESS_REG){
+          close();
+          MessagerGUI m = new MessagerGUI();
+          m.setVisible(true);
+        }else if(temp_h.getType() == Command.FAILURE_LOG){
+          warning w = new warning();
+          warning.setText("Wrong username or password, please try again.");
+          w.setVisible(true);
+        }else if(temp_h.getType() == Command.FAILURE_REG){
+          warning w = new warning();
+          warning.setText("Someone else use the same info, please try again.");
+          w.setVisible(true);
         }
     }
     private void SignupButtonActionPerformed(java.awt.event.ActionEvent evt) {
