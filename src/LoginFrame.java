@@ -16,7 +16,7 @@ import java.awt.*;
  * @author yuchiang
  */
 public class LoginFrame extends javax.swing.JFrame {
-    Socket socket;
+    static  Socket socket;
     /**
      * Creates new form LoginFrame
      */
@@ -137,21 +137,16 @@ public class LoginFrame extends javax.swing.JFrame {
     public void reaction(Header temp_h){
         if(temp_h.getType() == Command.SUCCESS_LOG || temp_h.getType() == Command.SUCCESS_REG){
           close();
-          MessagerGUI m = new MessagerGUI();
-
           Curinfo c = temp_h.c;
+          MessagerGUI m = new MessagerGUI(c);
           User temp_user = temp_h.getUser();
           ArrayList<Integer> roomlist = temp_user.roomlist;
-          m.setOnlineList(curonline);
-          m.setOfflineList(curonline);
           m.setVisible(true);
         }else if(temp_h.getType() == Command.FAILURE_LOG){
-          warning w = new warning();
-          warning.setText("Wrong username or password, please try again.");
+          Warning w = new Warning("Wrong username or password, please try again.");
           w.setVisible(true);
         }else if(temp_h.getType() == Command.FAILURE_REG){
-          warning w = new warning();
-          warning.setText("Someone else use the same info, please try again.");
+          Warning w = new Warning("Someone else use the same info, please try again.");
           w.setVisible(true);
         }
     }
@@ -199,6 +194,12 @@ public class LoginFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                String host = "127.0.0.1";
+                int port = 8000;
+                try{
+                    socket = new Socket(host,port);
+                }catch(IOException e){}
+                
                 new LoginFrame().setVisible(true);
             }
         });
