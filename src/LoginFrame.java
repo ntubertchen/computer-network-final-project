@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class LoginFrame extends javax.swing.JFrame implements Runnable{
     static Socket socket;
     static ConcurrentLinkedQueue<Header> queue;
+    static ConcurrentLinkedQueue<byte[]> filequeue;
     /**
      * Creates new form LoginFrame
      */
@@ -142,6 +143,9 @@ public class LoginFrame extends javax.swing.JFrame implements Runnable{
     }
     public void setqueue(ConcurrentLinkedQueue<Header> queue){
         this.queue = queue;
+    }
+    public void setfile(ConcurrentLinkedQueue<byte[]> by){
+        this.filequeue = by;
     }
     public void reaction(){
         Header temp_h;
