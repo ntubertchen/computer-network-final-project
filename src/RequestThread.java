@@ -14,14 +14,15 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RequestThread extends Thread{
 		private Socket socket;
-		HashMap<Integer,ArrayList<Header> > dataQueue;
-		HashMap<String,Socket> socket_map;
-		HashMap<String,User> userData;
-		HashMap<Integer,ArrayList<String>> chatroom_list;
-		RequestThread(Socket socket,HashMap<Integer,ArrayList<Header> > dataQueue,HashMap<String,Socket> socket_map,HashMap<String,User> userData,HashMap<Integer,ArrayList<String>> chatroom_list){
+		ConcurrentHashMap<Integer,ArrayList<Header> > dataQueue;
+		ConcurrentHashMap<String,Socket> socket_map;
+		ConcurrentHashMap<String,User> userData;
+		ConcurrentHashMap<Integer,ArrayList<String>> chatroom_list;
+		RequestThread(Socket socket,ConcurrentHashMap<Integer,ArrayList<Header> > dataQueue,ConcurrentHashMap<String,Socket> socket_map,ConcurrentHashMap<String,User> userData,ConcurrentHashMap<Integer,ArrayList<String>> chatroom_list){
 			this.socket = socket;
 			this.dataQueue = dataQueue;
 			this.socket_map = socket_map;

@@ -7,18 +7,19 @@ import java.lang.ClassNotFoundException;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.lang.Thread;
+import java.util.concurrent.ConcurrentHashMap;
 class Server extends Thread{
 	
 	public static void main(String[] args) {
-		HashMap<String,User> userData;
-		HashMap<Integer,ArrayList<Header> >	dataQueue;
-		HashMap<String,Socket> socket_map;
-		HashMap<Integer,ArrayList<String>> chatroom_list;
-		userData = new HashMap<String,User>();
-		dataQueue = new HashMap<Integer,ArrayList<Header> >();
-		socket_map = new HashMap<String,Socket>();
+		ConcurrentHashMap<String,User> userData;
+		ConcurrentHashMap<Integer,ArrayList<Header> >	dataQueue;
+		ConcurrentHashMap<String,Socket> socket_map;
+		ConcurrentHashMap<Integer,ArrayList<String>> chatroom_list;
+		userData = new ConcurrentHashMap<String,User>();
+		dataQueue = new ConcurrentHashMap<Integer,ArrayList<Header> >();
+		socket_map = new ConcurrentHashMap<String,Socket>();
 		dataQueue.put(0,new ArrayList<Header>());
-		chatroom_list = new HashMap<Integer,ArrayList<String>>();
+		chatroom_list = new ConcurrentHashMap<Integer,ArrayList<String>>();
 		ServerSocket socket;
 		try{
 			socket = new ServerSocket(8000);
