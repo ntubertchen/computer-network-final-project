@@ -37,7 +37,7 @@ public class LoginFrame extends javax.swing.JFrame {
         UserLabel = new javax.swing.JLabel();
         PasswdLabel = new javax.swing.JLabel();
         TitleLabel = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        SignupButton = new javax.swing.JButton();
 
         jLabel4.setText("jLabel4");
 
@@ -61,10 +61,10 @@ public class LoginFrame extends javax.swing.JFrame {
 
         TitleLabel.setText("Welcome to Messenger!");
 
-        jButton1.setText("Sign up");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        SignupButton.setText("Sign up");
+        SignupButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                SignupButtonActionPerformed(evt);
             }
         });
 
@@ -76,7 +76,7 @@ public class LoginFrame extends javax.swing.JFrame {
                 .addGap(106, 106, 106)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(SignupButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(LoginButton))
                     .addGroup(layout.createSequentialGroup()
@@ -108,7 +108,7 @@ public class LoginFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LoginButton)
-                    .addComponent(jButton1))
+                    .addComponent(SignupButton))
                 .addContainerGap(90, Short.MAX_VALUE))
         );
 
@@ -126,8 +126,10 @@ public class LoginFrame extends javax.swing.JFrame {
         m.setVisible(true);
     }
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void SignupButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        Signup s = new Signup();
+        s.setVisible(true);
     }
 
     /**
@@ -168,9 +170,9 @@ public class LoginFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify
     private javax.swing.JButton LoginButton;
     private javax.swing.JLabel PasswdLabel;
+    private javax.swing.JButton SignupButton;
     private javax.swing.JLabel TitleLabel;
     private javax.swing.JLabel UserLabel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTextField1;
