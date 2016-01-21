@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+import java.net.Socket;
+import java.util.*;
 import java.util.ArrayList;
 import javax.swing.JList;
 /**
@@ -11,12 +12,17 @@ import javax.swing.JList;
  * @author yuchiang
  */
 public class MessagerGUI extends javax.swing.JFrame {
-
+    static User user;
+    static Socket socket;
     /**
      * Creates new form MessagerGUI
      */
-    public MessagerGUI(Curinfo c) {
+    private HashMap<String , SingleChat> chatMap;
+    public MessagerGUI(Curinfo c,User user,Socket socket) {
         initComponents(c);
+        this.socket = socket;
+        this.user = user;
+        chatMap = new HashMap<String , SingleChat>();
     }
 
     
@@ -33,12 +39,13 @@ public class MessagerGUI extends javax.swing.JFrame {
     private void initComponents(Curinfo c) {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        onlineList = new javax.swing.JList<>();
+       // onlineList = new javax.swing.JList(c.curonline.toArray());
         chatroomButton = new javax.swing.JButton();
         onlineButton = new javax.swing.JButton();
         onlineLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        offlineList = new javax.swing.JList<>();
+        onlineList = new javax.swing.JList(c.curonline.toArray());
+        offlineList = new javax.swing.JList(c.curoffline.toArray());
         offlineLabel = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
@@ -51,13 +58,6 @@ public class MessagerGUI extends javax.swing.JFrame {
         setTitle("Messenger");
         setBackground(new java.awt.Color(255, 255, 255));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-
-        // onlineList.setModel(new javax.swing.AbstractListModel<String>() {
-        //     String[] strings;
-        //     public int getSize() { return strings.length; }
-        //     public String getElementAt(int i) { return strings[i]; }
-        // }); 
 
         onlineList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         onlineList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -83,11 +83,6 @@ public class MessagerGUI extends javax.swing.JFrame {
 
         onlineLabel.setText("Online");
 
-        offlineList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(offlineList);
 
         offlineLabel.setText("Offline");
@@ -173,10 +168,16 @@ public class MessagerGUI extends javax.swing.JFrame {
                 onlineButton.setEnabled(true);
             }
         // }
-        SingleChat s = new SingleChat();
+        SingleChat s = new SingleChat(this.user,socket);
         s.setTitle(onlineList.getSelectedValue());
+        chatMap.put(onlineList.getSelectedValue(), s);
         s.setVisible(true);
     }                                               
+    public void getMessage(String username,String msg){
+        SingleChat temp_chat = new SingleChat(null,null);
+        temp_chat = chatMap.get(username);
+        temp_chat.addMessageToScreen(username,msg);
+    }
 
     private void onlineListValueChanged(javax.swing.event.ListSelectionEvent evt) {                                        
         // TODO add your handling code here:
@@ -188,7 +189,11 @@ public class MessagerGUI extends javax.swing.JFrame {
             onlineButton.setEnabled(true);
         }
         
-    }                                       
+    }    
+    public void updateList(Curinfo c){
+        onlineList = new javax.swing.JList(c.curonline.toArray());
+        offlineList = new javax.swing.JList(c.curoffline.toArray());
+    }                                   
 
     /**
      * @param args the command line arguments

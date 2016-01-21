@@ -38,7 +38,7 @@ public class RequestThread extends Thread{
 			try{
 				Header temp_h;
 				inputstream = new ObjectInputStream(socket.getInputStream());
-				while(true && socket.isClosed() == false){
+				while(socket.isClosed() == false){
 					try{
 							temp_h = (Header) inputstream.readObject();
 							ObjectOutputStream objectOutput;
@@ -53,12 +53,28 @@ public class RequestThread extends Thread{
 								}else{
 									User temp_user = temp_h.getUser();
 									userData.put(temp_user.getUsername(),new User(temp_user.getUsername(),temp_user.getUserpassword()));
-									if(userData.containsKey("123") == true)
-										System.out.println("success put");
+
 									try{
 										Header success = new Header();
 										success.setType(Command.SUCCESS_REG);
 										success.setUser(temp_user);
+										User s = temp_h.getUser();
+										socket_map.put(s.getUsername(),socket);
+										Curinfo temp_info = new Curinfo();
+										Set<Map.Entry<String, Socket>> socket_entrySet = socket_map.entrySet();
+										Iterator<Map.Entry<String, Socket>> temp_it_hashmap = socket_entrySet.iterator();
+										//Iterator temp_it_hashmap = socket_map.entrySet().iterator();
+										while(temp_it_hashmap.hasNext()){
+											System.out.println("in map");
+											Map.Entry<String, Socket> temp_pair = temp_it_hashmap.next();
+											temp_socket = temp_pair.getValue();
+											if(temp_socket.isClosed() == true){
+												temp_info.curoffline.add(temp_pair.getKey());
+											}else{
+												temp_info.curonline.add(temp_pair.getKey());
+											}
+										}
+										success.setCurinfo(temp_info);
 										objectOutput = new ObjectOutputStream(socket.getOutputStream());
 										objectOutput.writeObject(success);
 									}catch(IOException regs){System.out.println("SUCCESS_REG failure");}
@@ -196,6 +212,7 @@ public class RequestThread extends Thread{
 										Header temp_header = temp_it_header.next();
 										String temp_string = temp_h.getOwner();
 										if(temp_string.equals(temp_header.getOwner()) == true || temp_string.equals(temp_header.getReceiver()) == true){
+											temp_header.setType(Command.MSG_SYNC);
 											try{
 												objectOutput = new ObjectOutputStream(socket.getOutputStream());
 												objectOutput.writeObject(temp_header);

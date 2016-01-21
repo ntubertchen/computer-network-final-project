@@ -3,13 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+import java.net.Socket;
+import java.io.ObjectOutputStream;
+import java.io.IOException;
 /**
  *
  * @author yuchiang
  */
 public class MultipleChat extends javax.swing.JFrame {
-
+    Socket socket;
+    User user;
+    String subject;
     /**
      * Creates new form MultipleChat
      */
@@ -17,6 +21,9 @@ public class MultipleChat extends javax.swing.JFrame {
         initComponents();
     }
 
+    public void addMessageToScreen(String sender, String content){
+        MessageView.append(sender + ": " + content + "\n") ;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -103,8 +110,20 @@ public class MultipleChat extends javax.swing.JFrame {
 
     private void SendButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
         // TODO add your handling code here:
+        Header h = new Header();
+        h.setType(Command.SEND_MSG);
+        h.setUser(this.user);
+        h.setReceiver(subject);
+        h.setOwner(this.user.getUsername());
         String msg = TypeField.getText();
-        MessageView.append( msg + "\n") ;
+        h.setMsg(msg);
+        try{
+            ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());
+            objectOutput.writeObject(h);
+        }catch(IOException chats){
+            System.out.println("client send button fail");
+        }
+        MessageView.append("Me: " + msg + "\n") ;
         TypeField.setText("");
 
     }                                          

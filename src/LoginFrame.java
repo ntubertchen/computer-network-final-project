@@ -21,6 +21,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class LoginFrame extends javax.swing.JFrame implements Runnable{
     static Socket socket;
     static ConcurrentLinkedQueue<Header> queue;
+    static ConcurrentLinkedQueue<byte[]> filequeue;
+    static MessagerGUI m;
+    static User user;
     /**
      * Creates new form LoginFrame
      */
@@ -143,6 +146,9 @@ public class LoginFrame extends javax.swing.JFrame implements Runnable{
     public void setqueue(ConcurrentLinkedQueue<Header> queue){
         this.queue = queue;
     }
+    public void setfile(ConcurrentLinkedQueue<byte[]> by){
+        this.filequeue = by;
+    }
     public void reaction(){
         Header temp_h;
         temp_h = queue.poll();
@@ -153,7 +159,9 @@ public class LoginFrame extends javax.swing.JFrame implements Runnable{
           System.out.println("SUCCESS_REG");
           close();
           Curinfo c = temp_h.c;
-          MessagerGUI m = new MessagerGUI(c);
+          ArrayList<String> t;
+          user = temp_h.getUser();
+          m = new MessagerGUI(c,temp_h.getUser(),socket);
           if(temp_h.getUser() != null){
               User temp_user = temp_h.getUser();
               ArrayList<Integer> roomlist  = temp_user.roomlist;
@@ -165,7 +173,27 @@ public class LoginFrame extends javax.swing.JFrame implements Runnable{
         }else if(temp_h.getType() == Command.FAILURE_REG){
           Warning w = new Warning("Someone else use the same info, please try again.");
           w.setVisible(true);
+        }else if(temp_h.getType() == Command.SEND_MSG){
+            System.out.println("SEND_MSG");
+            //
+            String sender = temp_h.getOwner();
+            String messege = temp_h.getMsg();
+            m.getMessage(sender,messege);
+
+        }else if(temp_h.getType() == Command.MSG_SYNC){
+            String sender = temp_h.getOwner();
+            String messege = temp_h.getMsg();
+            m.getMessage(sender,messege);            
         }
+        /*else if(temp_h.getType() == Command.SEND_FILE){
+            System.out.println("SEND_FILE");
+            //
+            Curinfo c = temp_h.c;
+     //       SingleChat nowRoom = c.getRoom();
+            // add addFile API
+            return;
+        }*/
+        return;
     }
     private void SignupButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
