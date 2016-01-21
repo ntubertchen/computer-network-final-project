@@ -22,8 +22,11 @@ public class LoginFrame extends javax.swing.JFrame implements Runnable{
     static Socket socket;
     static ConcurrentLinkedQueue<Header> queue;
     static ConcurrentLinkedQueue<byte[]> filequeue;
+<<<<<<< HEAD
     static MessagerGUI m;
     static User user;
+=======
+>>>>>>> 37c522c15fbdc823e208388cd7edad7a040d933c
     /**
      * Creates new form LoginFrame
      */
