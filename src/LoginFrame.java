@@ -137,7 +137,7 @@ public class LoginFrame extends javax.swing.JFrame {
     }
     public void reaction(Header temp_h){
         if(type == Command.SUCCESS_LOG || type == Command.SUCCESS_REG){
-            
+                
         }
     }
     private void SignupButtonActionPerformed(java.awt.event.ActionEvent evt) {
