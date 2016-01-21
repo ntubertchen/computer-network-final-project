@@ -19,30 +19,29 @@ public class RequestThread extends Thread{
 			ObjectInputStream inputstream;
 			System.out.println("start");
 			try{
-				inputstream = new ObjectInputStream(socket.getInputStream());
-				try{
-					Header h = (Header) inputstream.readObject();
-					this.socket_map.put(h.getOwner(),this.socket);
-					System.out.println(h.getOwner());
-				}catch(ClassNotFoundException e){
-					System.out.println("first not Header");
-				}
 				Header temp_h;
-				while(true && socket.isClosed() == true){
+				inputstream = new ObjectInputStream(socket.getInputStream());
+				while(true && socket.isClosed() == false){
 					try{
-						try{	
-							temp_h = (Header) inputstream.readObject();
-							Socket temp_socket = socket_map.get(temp_h.getReceiver());
-							try{
-								ObjectOutputStream objectOutput = new ObjectOutputStream(temp_socket.getOutputStream());
-								objectOutput.writeObject(temp_h);
-							}catch(IOException ex){
-								System.out.println("write to " + temp_h.getReceiver() + "fail");
+							temp_h = (Header) inputstream.readObject();	
+							if(socket_map.containsKey(temp_h.getOwner()) == false){
+								this.socket_map.put(temp_h.getOwner(),this.socket);
 							}
-							ArrayList<Header> temp_list = dataQueue.get(temp_h.getRoom());
-							temp_list.add(temp_h);
-						}catch(IOException ae){
-						}
+							if(socket_map.containsKey(temp_h.getReceiver()) == true){
+								Socket temp_socket = socket_map.get(temp_h.getReceiver());
+								if(temp_socket.isClosed() == false){
+									try{
+										ObjectOutputStream objectOutput = new ObjectOutputStream(temp_socket.getOutputStream());
+										objectOutput.writeObject(temp_h);
+									}catch(IOException ex){
+										System.out.println("write to " + temp_h.getReceiver() + "fail");
+									}
+								}
+								ArrayList<Header> temp_list = dataQueue.get(temp_h.getRoom());
+								temp_list.add(temp_h);
+							}else{
+								System.out.println("player" + temp_h.getReceiver() + "not init");
+							}
 					}catch(ClassNotFoundException e){
 						System.out.println("in thread,class not found");
 					}

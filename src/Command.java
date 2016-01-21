@@ -12,5 +12,7 @@ public class Command{
 					 SEND_MSG_CHAT = 6,
 					 SEND_MSG_CHAT_ACK = 7,
 					 SEND_FILE_CHAT = 8,
-					 SEND_FILE_CHAT_ACK = 9; 
+					 SEND_FILE_CHAT_ACK = 9;
+	//chat room 0 for conversion
+	//other number for multiple serverice
 }
