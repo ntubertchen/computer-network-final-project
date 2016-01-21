@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.io.IOException;
 import java.lang.ClassNotFoundException;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,7 +41,7 @@ public class RequestThread extends Thread{
 							if(temp_h.getType() == Command.REGISTER){
 								if(userData.containsKey(temp_h.getOwner()) == true){//re no
 									try{
-										Header failure;
+										Header failure = new Header();
 										failure.setType(Command.FAILURE_REG);
 										objectOutput = new ObjectOutputStream(socket.getOutputStream());
 										objectOutput.writeObject(failure);
@@ -48,7 +50,7 @@ public class RequestThread extends Thread{
 									User temp_user = temp_h.getUser();
 									userData.put(temp_user.getUsername(),temp_user);
 									try{
-										Header success;
+										Header success = new Header();
 										success.setType(Command.SUCCESS_REG);
 										objectOutput = new ObjectOutputStream(socket.getOutputStream());
 										objectOutput.writeObject(success);
@@ -59,14 +61,16 @@ public class RequestThread extends Thread{
 								if(userData.containsKey(temp_h.getOwner()) == true && u.check(userData.get(temp_h.getOwner())) == true){
 									try{
 										//return user data
-										Header success;
+										Header success = new Header();
 										u = userData.get(temp_h.getOwner());
 										success.setUser(u);
 										success.setType(Command.SUCCESS_LOG);
 										Curinfo temp_info = new Curinfo();
-										Iterator temp_it_hashmap = socket_map.entrySet().iterator();
+										Set<Map.Entry<String, Socket>> socket_entrySet = socket_map.entrySet();
+										Iterator<Map.Entry<String, Socket>> temp_it_hashmap = socket_entrySet.iterator();
+										//Iterator temp_it_hashmap = socket_map.entrySet().iterator();
 										while(temp_it_hashmap.hasNext()){
-											HashMap.Entry temp_pair = (HashMap.Entry)temp_it_hashmap.next();
+											Map.Entry<String, Socket> temp_pair = temp_it_hashmap.next();
 											temp_socket = temp_pair.getValue();
 											if(temp_socket.isClosed() == true){
 												temp_info.curoffline.add(temp_pair.getKey());
@@ -80,7 +84,7 @@ public class RequestThread extends Thread{
 									}catch(IOException logs){}
 								}else{
 									try{
-										Header failure;
+										Header failure = new Header();
 										failure.setType(Command.FAILURE_LOG);
 										objectOutput = new ObjectOutputStream(socket.getOutputStream());
 										objectOutput.writeObject(failure);
@@ -94,14 +98,14 @@ public class RequestThread extends Thread{
 											objectOutput = new ObjectOutputStream(temp_socket.getOutputStream());
 											objectOutput.writeObject(temp_h);
 										}catch(IOException msg){}
-										Header success;
+										Header success = new Header();
 										success.setType(Command.SUCCESS_MSG);
 										try{
 											objectOutput = new ObjectOutputStream(socket.getOutputStream());
 											objectOutput.writeObject(success);
 										}catch(IOException msgacks){}
 									}else{
-										Header failure;
+										Header failure = new Header();
 										failure.setType(Command.FAILURE_MSG);
 										try{
 											objectOutput = new ObjectOutputStream(socket.getOutputStream());
@@ -111,7 +115,7 @@ public class RequestThread extends Thread{
 									temp_list = dataQueue.get(0);
 									temp_list.add(temp_h);
 								}else{
-									Header failure;
+									Header failure = new Header();
 									failure.setType(Command.NOSUCHUSER);
 									try{
 										objectOutput = new ObjectOutputStream(socket.getOutputStream());
@@ -212,12 +216,14 @@ public class RequestThread extends Thread{
 
 							}else if(temp_h.getType() == Command.KNOCKING){
 								try{
-									Header success;
+									Header success = new Header();
 									success.setType(Command.KNOCKING_ACK);
 									Curinfo temp_info = new Curinfo();
-									Iterator temp_it_hashmap = socket_map.entrySet().iterator();
+									Set<Map.Entry<String, Socket>> socket_entrySet = socket_map.entrySet();
+									Iterator<Map.Entry<String, Socket>> temp_it_hashmap = socket_entrySet.iterator();
+									//Iterator temp_it_hashmap = socket_map.entrySet().iterator();
 									while(temp_it_hashmap.hasNext()){
-										HashMap.Entry temp_pair = (HashMap.Entry)temp_it_hashmap.next();
+										Map.Entry<String, Socket> temp_pair = temp_it_hashmap.next();
 										temp_socket = temp_pair.getValue();
 										if(temp_socket.isClosed() == true){
 											temp_info.curoffline.add(temp_pair.getKey());

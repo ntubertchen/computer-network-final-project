@@ -24,26 +24,20 @@ class Client{
                         }catch(IOException io){
                                 io.printStackTrace();
                         }
+                        System.out.println("owner");
                         h.setOwner(input);
                         try{
                                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
                                 input = br.readLine();
+                                System.out.println("receiver");
                         }catch(IOException io){
                                 io.printStackTrace();
                         }
                         h.setReceiver(input);
-        		ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());
-        		objectOutput.writeObject(h);
-                        try{
-                             ObjectInputStream inputstream;
-                             inputstream = new ObjectInputStream(socket.getInputStream());
-                             try{
-                                Header temp = (Header) inputstream.readObject();
-                                System.out.println(temp.getOwner() + " " + temp.getReceiver());
-                             }catch(IOException ee){}
-                        }catch(ClassNotFoundException aaaa){
-
-                        }
+                		h.setType(110);
+                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());
+                        objectOutput.writeObject(h);
+                        System.out.println("after send");
                         while(true){
                         }
         	}catch(IOException yee){
