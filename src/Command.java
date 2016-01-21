@@ -23,7 +23,7 @@ public class Command{
 					 INIT_CHAT = 17,
 					 CHAT_ADD = 18,
 					 MSG_SYNC = 19,
-					 CHAT_SYNC = 20,
+					 CHAT_SYNC = 20;
 
 
 	//chat room 0 for conversion
