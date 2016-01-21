@@ -7,6 +7,13 @@ class Header implements Serializable{
 	private int room;
 	private User u;
 	ArrayList<User> userlist;
+	Curinfo c;
+	public void setCurinfo(Curinfo c){
+		this.c = c;
+	}
+	public Curinfo getCurinfo(){
+		return this.c;
+	}
 	public void add(User u){
 		this.userlist.add(u);
 	}

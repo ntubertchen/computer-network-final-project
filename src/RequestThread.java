@@ -2,6 +2,7 @@ import java.net.Socket;
 import java.net.ServerSocket;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Iterator;
 import java.io.IOException;
 import java.lang.ClassNotFoundException;
 import java.util.HashMap;
@@ -40,15 +41,16 @@ public class RequestThread extends Thread{
 									try{
 										Header failure;
 										failure.setType(Command.FAILURE_REG);
-										objectOutput = new ObjectOutputStream(temp_socket.getOutputStream());
+										objectOutput = new ObjectOutputStream(socket.getOutputStream());
 										objectOutput.writeObject(failure);
 									}catch(IOException reg){}
 								}else{
-									userData.put(temp_h.getUsername(),temp_h.getUserpassword());
+									User temp_user = temp_h.getUser();
+									userData.put(temp_user.getUsername(),temp_user);
 									try{
 										Header success;
 										success.setType(Command.SUCCESS_REG);
-										objectOutput = new ObjectOutputStream(temp_socket.getOutputStream());
+										objectOutput = new ObjectOutputStream(socket.getOutputStream());
 										objectOutput.writeObject(success);
 									}catch(IOException regs){}
 								}
@@ -61,14 +63,26 @@ public class RequestThread extends Thread{
 										u = userData.get(temp_h.getOwner());
 										success.setUser(u);
 										success.setType(Command.SUCCESS_LOG);
-										objectOutput = new ObjectOutputStream(temp_socket.getOutputStream());
+										Curinfo temp_info = new Curinfo();
+										Iterator temp_it_hashmap = socket_map.entrySet().iterator();
+										while(temp_it_hashmap.hasNext()){
+											HashMap.Entry temp_pair = (HashMap.Entry)temp_it_hashmap.next();
+											temp_socket = temp_pair.getValue();
+											if(temp_socket.isClosed() == true){
+												temp_info.curoffline.add(temp_pair.getKey());
+											}else{
+												temp_info.curonline.add(temp_pair.getKey());
+											}
+										}
+										success.setCurinfo(temp_info);
+										objectOutput = new ObjectOutputStream(socket.getOutputStream());
 										objectOutput.writeObject(success);
 									}catch(IOException logs){}
 								}else{
 									try{
 										Header failure;
 										failure.setType(Command.FAILURE_LOG);
-										objectOutput = new ObjectOutputStream(temp_socket.getOutputStream());
+										objectOutput = new ObjectOutputStream(socket.getOutputStream());
 										objectOutput.writeObject(failure);
 									}catch(IOException log){}
 								}
@@ -91,7 +105,7 @@ public class RequestThread extends Thread{
 										failure.setType(Command.FAILURE_MSG);
 										try{
 											objectOutput = new ObjectOutputStream(socket.getOutputStream());
-											objectOutput.writeObject(success);
+											objectOutput.writeObject(failure);
 										}catch(IOException msgack){}
 									}
 									temp_list = dataQueue.get(0);
@@ -106,7 +120,7 @@ public class RequestThread extends Thread{
 								}
 							}else if(temp_h.getType() == Command.SEND_MSG_CHAT){
 								ArrayList<String> chat_user;
-								chat_user = userlist.get(temp_h.getRoom());
+								chat_user = chatroom_list.get(temp_h.getRoom());
 								Iterator<String> temp_it_user_string = chat_user.iterator();
 								while(temp_it_user_string.hasNext()){
 									String temp_user_string;
@@ -130,8 +144,8 @@ public class RequestThread extends Thread{
 								temp_list.add(temp_h);
 							}else if(temp_h.getType() == Command.INIT_CHAT){
 								temp_h.setRoom(chatroom);
-								userlist.put(chatroom,new ArrayList<String>());
-								ArrayList<String> chat_user = userlist.get.(chatroom);
+								chatroom_list.put(chatroom,new ArrayList<String>());
+								ArrayList<String> chat_user = chatroom_list.get(chatroom);
 								dataQueue.put(temp_h.getRoom(),new ArrayList<Header>());
 								chatroom++;
 								ArrayList<User> temp_userlist;
@@ -156,10 +170,10 @@ public class RequestThread extends Thread{
 					/*			temp_list = dataQueue.get(temp_h.getRoom());
 								temp_list.add(temp_h);*/
 							}else if(temp_h.getType() == Command.CHAT_ADD){
-								ArrayList<String> chat_user = userlist.get.(temp_h.getRoom());
+								ArrayList<String> chat_user = chatroom_list.get(temp_h.getRoom());
 								ArrayList<User> temp_userlist;
 								temp_userlist = temp_h.userlist;
-								Iterator temp_it_user = temp_userlist.iterator();
+								Iterator<User> temp_it_user = temp_userlist.iterator();
 								while(temp_it_user.hasNext()){
 									User temp_user;
 									temp_user = temp_it_user.next();
@@ -194,6 +208,27 @@ public class RequestThread extends Thread{
 										}catch(IOException chatsyncs){}
 									}
 								}
+							}else if(temp_h.getType() == Command.SEND_FILE){
+
+							}else if(temp_h.getType() == Command.KNOCKING){
+								try{
+									Header success;
+									success.setType(Command.KNOCKING_ACK);
+									Curinfo temp_info = new Curinfo();
+									Iterator temp_it_hashmap = socket_map.entrySet().iterator();
+									while(temp_it_hashmap.hasNext()){
+										HashMap.Entry temp_pair = (HashMap.Entry)temp_it_hashmap.next();
+										temp_socket = temp_pair.getValue();
+										if(temp_socket.isClosed() == true){
+											temp_info.curoffline.add(temp_pair.getKey());
+										}else{
+											temp_info.curonline.add(temp_pair.getKey());
+										}
+									}
+									success.setCurinfo(temp_info);
+									objectOutput = new ObjectOutputStream(socket.getOutputStream());
+									objectOutput.writeObject(success);
+								}catch(IOException logs){}
 							}
 					}catch(ClassNotFoundException e){
 						System.out.println("in thread,class not found");

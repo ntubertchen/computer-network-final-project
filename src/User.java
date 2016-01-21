@@ -1,9 +1,10 @@
+import java.util.ArrayList;
 class User{
 	private String username;
 	private String password;
 	int lastshowup;
 	ArrayList<Integer> roomlist;
-
+	
 	public void addroom(int i){
 		this.roomlist.add(i);
 	}
