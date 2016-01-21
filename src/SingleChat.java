@@ -148,6 +148,8 @@ public class SingleChat extends javax.swing.JFrame {
 
     private void HistoryButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        History s = new History();
+        s.setVisible(true);
     }
 
     /**
