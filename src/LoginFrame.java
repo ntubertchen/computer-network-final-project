@@ -128,6 +128,7 @@ public class LoginFrame extends javax.swing.JFrame {
         User u = new User(name,password);
         h.setUser(u);
         h.setType(Command.LOGIN);
+        h.setOwner(u.getUsername());
         ObjectOutputStream objectOutput;
         try{
             objectOutput = new ObjectOutputStream(socket.getOutputStream());
@@ -171,6 +172,7 @@ public class LoginFrame extends javax.swing.JFrame {
         User u = new User(name,password);
         h.setUser(u);
         h.setType(Command.REGISTER);
+        h.setOwner(u.getUsername());
         ObjectOutputStream objectOutput;
         try{
             objectOutput = new ObjectOutputStream(socket.getOutputStream());
