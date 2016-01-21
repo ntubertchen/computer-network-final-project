@@ -1,6 +1,8 @@
-
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.awt.Toolkit;
 import java.awt.event.*;
+import java.io.IOException;
 import java.awt.*;
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -13,7 +15,7 @@ import java.awt.*;
  * @author yuchiang
  */
 public class LoginFrame extends javax.swing.JFrame {
-
+    Socket socket;
     /**
      * Creates new form LoginFrame
      */
@@ -118,6 +120,17 @@ public class LoginFrame extends javax.swing.JFrame {
     }
     private void LoginButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        String name = userField.getText();
+        String password = passwdField.getText();
+        Header h = new Header();
+        User u = new User(name,password);
+        h.setUser(u);
+        h.setType(Command.LOGIN);
+        ObjectOutputStream objectOutput;
+        try{
+            objectOutput = new ObjectOutputStream(socket.getOutputStream());
+            objectOutput.writeObject(h);
+        }catch(IOException reg){}
         close();
         MessagerGUI m = new MessagerGUI();
         m.setVisible(true);
@@ -125,9 +138,18 @@ public class LoginFrame extends javax.swing.JFrame {
 
     private void SignupButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-
+        String name = userField.getText();
+        String password = passwdField.getText();
+        Header h = new Header();
+        User u = new User(name,password);
+        h.setUser(u);
+        h.setType(Command.REGISTER);
+        ObjectOutputStream objectOutput;
+        try{
+            objectOutput = new ObjectOutputStream(socket.getOutputStream());
+            objectOutput.writeObject(h);
+        }catch(IOException reg){}
     }
-
     /**
      * @param args the command line arguments
      */
