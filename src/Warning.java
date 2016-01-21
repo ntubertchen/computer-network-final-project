@@ -25,7 +25,7 @@ public class Warning extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
-    sssss
+    
 
     private void initComponents(String s) {
 
