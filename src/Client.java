@@ -48,3 +48,19 @@ class Client{
         }
 	}
 }
+import java.lang.Thread;
+import java.io.IOException;
+import java.net.Socket;
+class test{
+    public static void main(String[] args) {
+        LoginFrame l = new LoginFrame();
+        Socket socket = new Socket();
+        String host = "127.0.0.1";
+        int port = 8000;
+        try{
+            socket = new Socket(host,port);
+        }catch(IOException e){}
+        l.setSocket(socket);
+        l.run();
+    }
+}
