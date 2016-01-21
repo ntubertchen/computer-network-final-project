@@ -22,6 +22,9 @@ public class SingleChat extends javax.swing.JFrame {
         initComponents();
     }
 
+    public void addMessageToScreen(String sender, String content){
+        MessageView.append(sender + ": " + content + "\n") ;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

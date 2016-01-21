@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.io.ObjectInputStream;
 import java.io.IOException;
+import java.lang.Thread;
 import java.awt.*;
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -16,7 +17,7 @@ import java.awt.*;
  *
  * @author yuchiang
  */
-public class LoginFrame extends javax.swing.JFrame {
+public class LoginFrame extends javax.swing.JFrame implements Runnable{
     static  Socket socket;
     /**
      * Creates new form LoginFrame
@@ -136,15 +137,6 @@ public class LoginFrame extends javax.swing.JFrame {
         }catch(IOException reg){
             System.out.println("login FAILURE_REG");
         }
-        try{
-            ObjectInputStream inputstream;
-            inputstream = new ObjectInputStream(socket.getInputStream());
-            try{
-                Header temp_h;
-                temp_h = (Header) inputstream.readObject();
-                reaction(temp_h);
-            }catch(ClassNotFoundException aaaa){}
-        }catch(IOException aaa){}
     }
     public void reaction(Header temp_h){
         if(temp_h.getType() == Command.SUCCESS_LOG || temp_h.getType() == Command.SUCCESS_REG){
@@ -166,6 +158,7 @@ public class LoginFrame extends javax.swing.JFrame {
     }
     private void SignupButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        System.out.println("Sign");
         String name = userField.getText();
         String password = passwdField.getText();
         Header h = new Header();
@@ -180,25 +173,14 @@ public class LoginFrame extends javax.swing.JFrame {
         }catch(IOException reg){
             System.out.println("reg FAILURE_REG");
         }
-        try{
-            ObjectInputStream inputstream;
-            inputstream = new ObjectInputStream(socket.getInputStream());
-            try{
-                Header temp_h;
-                temp_h = (Header) inputstream.readObject();
-                reaction(temp_h);
-            }catch(ClassNotFoundException aaaa){}
-        }catch(IOException aaa){}
     }
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
+    public void setSocket(Socket s){
+        this.socket = s;
+    }
+    public void run(){
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -215,21 +197,24 @@ public class LoginFrame extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+                new LoginFrame().setVisible(true);
+    }
+   // public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+         */
+        
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                String host = "127.0.0.1";
-                int port = 8000;
-                try{
-                    socket = new Socket(host,port);
-                }catch(IOException e){}
+     //   java.awt.EventQueue.invokeLater(new Runnable() {
+       //     public void run() {
                 
-                new LoginFrame().setVisible(true);
-            }
-        });
-    }
+   //         }
+    //    });
+    //}
 
     // Variables declaration - do not modify
     private javax.swing.JButton LoginButton;
