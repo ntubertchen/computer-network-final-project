@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 public class RequestThread extends Thread{
 		private Socket socket;
 		HashMap<Integer,ArrayList<Header> > dataQueue;
@@ -147,6 +150,9 @@ public class RequestThread extends Thread{
 								temp_list = dataQueue.get(temp_h.getRoom());
 								temp_list.add(temp_h);
 							}else if(temp_h.getType() == Command.INIT_CHAT){
+								while(chatroom_list.containsKey(chatroom) == true){
+									chatroom++;
+								}
 								temp_h.setRoom(chatroom);
 								chatroom_list.put(chatroom,new ArrayList<String>());
 								ArrayList<String> chat_user = chatroom_list.get(chatroom);
@@ -159,20 +165,7 @@ public class RequestThread extends Thread{
 									User temp_user;
 									temp_user = temp_it_user.next();
 									chat_user.add(temp_user.getUsername());
-							/*		if(socket_map.containsKey(temp_user.getUsername()) == true){
-										temp_socket = socket_map.get(temp_user.getUsername());
-										if(temp_socket.isClosed() == false){
-											try{
-												objectOutput = new ObjectOutputStream(temp_socket.getOutputStream());
-												objectOutput.writeObject(temp_h);
-											}catch(IOException chatinit){}
-										}else{
-											//user not online
-										}
-									}*/ // init chat and do what?
 								}
-					/*			temp_list = dataQueue.get(temp_h.getRoom());
-								temp_list.add(temp_h);*/
 							}else if(temp_h.getType() == Command.CHAT_ADD){
 								ArrayList<String> chat_user = chatroom_list.get(temp_h.getRoom());
 								ArrayList<User> temp_userlist;
@@ -213,7 +206,25 @@ public class RequestThread extends Thread{
 									}
 								}
 							}else if(temp_h.getType() == Command.SEND_FILE){
-
+								byte [] bytearray  = new byte [temp_h.filesize];
+							    InputStream is = socket.getInputStream();
+							    int current,bytesRead;
+							    bytesRead = is.read(bytearray,0,bytearray.length);
+							    current = bytesRead;
+							    do{
+							        bytesRead = is.read(bytearray, current, (bytearray.length-current));
+							        if(bytesRead >= 0) current += bytesRead;
+							    }while(bytesRead > -1);
+							    if(socket_map.containsKey(temp_h.getReceiver()) == true){
+							    	temp_socket = socket_map.get(temp_h.getReceiver());
+							    	if(temp_socket.isClosed() == false){
+							    		OutputStream outputstream;
+							    		outputstream = socket.getOutputStream();
+								        outputstream.write(bytearray,0,bytearray.length);
+								        outputstream.flush();
+							    	}
+							    }else{
+							    }
 							}else if(temp_h.getType() == Command.KNOCKING){
 								try{
 									Header success = new Header();
