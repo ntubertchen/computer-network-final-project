@@ -28,11 +28,6 @@ public class MessagerGUI extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         FriendList = new javax.swing.JList<>();
-        TypeField = new javax.swing.JTextField();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        MessageView = new javax.swing.JTextArea();
-        SendButton = new javax.swing.JButton();
-        NewFileButton = new javax.swing.JButton();
         ChatroomButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -47,92 +42,41 @@ public class MessagerGUI extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(FriendList);
 
-        TypeField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TypeFieldActionPerformed(evt);
-            }
-        });
-
-        MessageView.setEditable(false);
-        MessageView.setColumns(20);
-        MessageView.setRows(5);
-        jScrollPane2.setViewportView(MessageView);
-
-        SendButton.setText("Send");
-        SendButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SendButtonActionPerformed(evt);
-            }
-        });
-
-        NewFileButton.setText("Add files");
-        NewFileButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NewFileButtonActionPerformed(evt);
-            }
-        });
-
         ChatroomButton.setText("Chatroom");
+        ChatroomButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ChatroomButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(ChatroomButton)
+                .addContainerGap(30, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(TypeField)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(SendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(NewFileButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ChatroomButton)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE))
+                .addComponent(jScrollPane1)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(NewFileButton)
-                            .addComponent(ChatroomButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(SendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(TypeField, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
-                                .addGap(7, 7, 7))))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                .addComponent(ChatroomButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>
 
-    private void SendButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void ChatroomButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-        String msg = TypeField.getText();
-        MessageView.append( msg + "\n") ;
-        TypeField.setText("");
-
-    }
-
-    private void TypeFieldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void NewFileButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-        SelectFiles s = new SelectFiles();
+        singleChat s = new singleChat();
         s.setVisible(true);
     }
 
@@ -174,11 +118,6 @@ public class MessagerGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify
     private javax.swing.JButton ChatroomButton;
     private javax.swing.JList<String> FriendList;
-    private javax.swing.JTextArea MessageView;
-    private javax.swing.JButton NewFileButton;
-    private javax.swing.JButton SendButton;
-    private javax.swing.JTextField TypeField;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration
 }
