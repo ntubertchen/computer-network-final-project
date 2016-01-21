@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.lang.ClassNotFoundException;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 public class RequestThread extends Thread{
 		private Socket socket;
 		HashMap<Integer,ArrayList<Header> > dataQueue;
@@ -53,7 +56,10 @@ public class RequestThread extends Thread{
 								User u = temp_h.getUser();
 								if(userData.containsKey(temp_h.getOwner()) == true && u.check(userData.get(temp_h.getOwner())) == true){
 									try{
+										//return user data
 										Header success;
+										u = userData.get(temp_h.getOwner());
+										success.setUser(u);
 										success.setType(Command.SUCCESS_LOG);
 										objectOutput = new ObjectOutputStream(temp_socket.getOutputStream());
 										objectOutput.writeObject(success);

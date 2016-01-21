@@ -13,6 +13,9 @@ class Header implements Serializable{
 	public int getType(){
 		return this.type;
 	}
+	public void setUser(User u){
+		this.u = u;
+	}
 	public User getUser(){
 		return this.u;
 	}
