@@ -29,6 +29,8 @@ public class MessagerGUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         FriendList = new javax.swing.JList<>();
         ChatroomButton = new javax.swing.JButton();
+        StartTalkButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Messenger");
@@ -40,35 +42,60 @@ public class MessagerGUI extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        FriendList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(FriendList);
 
-        ChatroomButton.setText("Chatroom");
+        ChatroomButton.setText("Start a Chatroom");
         ChatroomButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ChatroomButtonActionPerformed(evt);
             }
         });
 
+        StartTalkButton.setText("Start to talk");
+        StartTalkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                StartTalkButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("or choose a friend to talk");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(ChatroomButton)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)
+                        .addGap(0, 2, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(StartTalkButton)
+                .addGap(23, 23, 23))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
+                .addComponent(ChatroomButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(12, 12, 12)
                 .addComponent(ChatroomButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE))
+                .addComponent(jLabel1)
+                .addGap(7, 7, 7)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(StartTalkButton)
+                .addContainerGap())
         );
 
         pack();
@@ -76,9 +103,30 @@ public class MessagerGUI extends javax.swing.JFrame {
 
     private void ChatroomButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+    }
+
+    private void FriendListValueChanged(javax.swing.event.ListSelectionEvent evt) {
+        // TODO add your handling code here:
+        if (evt.getValueIsAdjusting() == false) {
+            if (FriendList.getSelectedIndex() == -1) {
+            //No selection, disable fire button.
+                StartTalkButton.setEnabled(false);
+            } else {
+            //Selection, enable the fire button.
+                StartTalkButton.setEnabled(true);
+            }
+        }
+    }
+    // public void valueChanged(ListSelectionEvent e) {
+    //
+    // }
+    private void StartTalkButtonActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
         singleChat s = new singleChat();
+        s.setTitle(FriendList.getSelectedValue());
         s.setVisible(true);
     }
+
 
     /**
      * @param args the command line arguments
@@ -118,6 +166,8 @@ public class MessagerGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify
     private javax.swing.JButton ChatroomButton;
     private javax.swing.JList<String> FriendList;
+    private javax.swing.JButton StartTalkButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration
 }
