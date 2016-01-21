@@ -8,6 +8,7 @@ class Header implements Serializable{
 	private User u;
 	ArrayList<User> userlist;
 	Curinfo c;
+	int filesize;
 	public void setCurinfo(Curinfo c){
 		this.c = c;
 	}
