@@ -3,20 +3,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+import java.net.Socket; 
+import java.util.*;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.swing.JList;
+import java.util.concurrent.ConcurrentHashMap;
 /**
  *
  * @author yuchiang
  */
 public class MessagerGUI extends javax.swing.JFrame {
-
+    static User user;
+    static Socket socket;
+    static ConcurrentLinkedQueue<Header> q;
+    static ConcurrentLinkedQueue<Header> i;
     /**
      * Creates new form MessagerGUI
      */
-    public MessagerGUI(Curinfo c) {
+    private ConcurrentHashMap<String , SingleChat> chatMap;
+    public MessagerGUI(Curinfo c,User user,Socket socket,ConcurrentLinkedQueue<Header> q) {
         initComponents(c);
+        this.socket = socket;
+        this.i = new ConcurrentLinkedQueue<Header>();
+        this.q = q;
+        this.user = user;
+        chatMap = new ConcurrentHashMap<String , SingleChat>();
     }
 
     
@@ -33,12 +45,13 @@ public class MessagerGUI extends javax.swing.JFrame {
     private void initComponents(Curinfo c) {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        onlineList = new javax.swing.JList<>();
+       // onlineList = new javax.swing.JList(c.curonline.toArray());
         chatroomButton = new javax.swing.JButton();
         onlineButton = new javax.swing.JButton();
         onlineLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        offlineList = new javax.swing.JList<>();
+        onlineList = new javax.swing.JList(c.curonline.toArray());
+        offlineList = new javax.swing.JList(c.curoffline.toArray());
         offlineLabel = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
@@ -46,18 +59,12 @@ public class MessagerGUI extends javax.swing.JFrame {
         chatroomHistoryList = new javax.swing.JList<>();
         chatroomHistoryLabel = new javax.swing.JLabel();
         offlineButton = new javax.swing.JButton();
+        syncButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Messenger");
         setBackground(new java.awt.Color(255, 255, 255));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-
-        // onlineList.setModel(new javax.swing.AbstractListModel<String>() {
-        //     String[] strings;
-        //     public int getSize() { return strings.length; }
-        //     public String getElementAt(int i) { return strings[i]; }
-        // }); 
 
         onlineList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         onlineList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -83,11 +90,6 @@ public class MessagerGUI extends javax.swing.JFrame {
 
         onlineLabel.setText("Online");
 
-        offlineList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(offlineList);
 
         offlineLabel.setText("Offline");
@@ -102,6 +104,7 @@ public class MessagerGUI extends javax.swing.JFrame {
 
         offlineButton.setText("Offline Message");
 
+        syncButton.setText("Knock");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -110,32 +113,40 @@ public class MessagerGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(onlineButton)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
-                        .addComponent(offlineLabel, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane1))
-                    .addComponent(onlineLabel)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chatroomButton)
-                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chatroomHistoryLabel)
-                    .addComponent(offlineButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(onlineButton)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                                .addComponent(offlineLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jScrollPane1))
+                            .addComponent(onlineLabel)
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chatroomButton)
+                            .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(offlineButton)
+                            .addComponent(chatroomHistoryLabel)
+                            .addComponent(syncButton))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(syncButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chatroomHistoryLabel)
-                .addGap(1, 1, 1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chatroomButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(onlineLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -143,11 +154,11 @@ public class MessagerGUI extends javax.swing.JFrame {
                 .addComponent(onlineButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(offlineLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(offlineButton))
         );
 
@@ -173,10 +184,26 @@ public class MessagerGUI extends javax.swing.JFrame {
                 onlineButton.setEnabled(true);
             }
         // }
-        SingleChat s = new SingleChat();
-        s.setTitle(onlineList.getSelectedValue());
+        SingleChat s = new SingleChat(this.user,socket,i);
         s.setVisible(true);
+        s.run();
+        s.subject = onlineList.getSelectedValue();
+        s.setTitle(onlineList.getSelectedValue());
+        chatMap.put(onlineList.getSelectedValue(), s);
     }                                               
+    public void getMessage(){
+        Header t = q.poll();
+        String username, msg;
+        username = t.getOwner();
+        msg = t.getMsg();
+        System.out.println("own"+username);
+        SingleChat temp_chat = new SingleChat(null,null,null);
+        if(chatMap.containsKey(username) == true){
+            temp_chat = chatMap.get(username);
+            i.add(t);
+            temp_chat.addMessageToScreen();
+        }
+    }
 
     private void onlineListValueChanged(javax.swing.event.ListSelectionEvent evt) {                                        
         // TODO add your handling code here:
@@ -188,7 +215,11 @@ public class MessagerGUI extends javax.swing.JFrame {
             onlineButton.setEnabled(true);
         }
         
-    }                                       
+    }    
+    public void updateList(Curinfo c){
+        onlineList = new javax.swing.JList(c.curonline.toArray());
+        offlineList = new javax.swing.JList(c.curoffline.toArray());
+    }                                   
 
     /**
      * @param args the command line arguments
@@ -240,5 +271,6 @@ public class MessagerGUI extends javax.swing.JFrame {
     private javax.swing.JButton onlineButton;
     private javax.swing.JLabel onlineLabel;
     private javax.swing.JList<String> onlineList;
+    private javax.swing.JButton syncButton;
     // End of variables declaration                   
 }

@@ -22,10 +22,14 @@ public class LoginFrame extends javax.swing.JFrame implements Runnable{
     static Socket socket;
     static ConcurrentLinkedQueue<Header> queue;
     static ConcurrentLinkedQueue<byte[]> filequeue;
+    static ConcurrentLinkedQueue<Header> q;
+    static MessagerGUI m;
+    static User user;
     /**
      * Creates new form LoginFrame
      */
     public LoginFrame() {
+        this.q = new ConcurrentLinkedQueue<Header>();
         initComponents();
     }
 
@@ -155,9 +159,11 @@ public class LoginFrame extends javax.swing.JFrame implements Runnable{
         System.out.println(temp_h.getType());
         if(temp_h.getType() == Command.SUCCESS_LOG || temp_h.getType() == Command.SUCCESS_REG){
           System.out.println("SUCCESS_REG");
-          close();
+         this.setVisible(false);
           Curinfo c = temp_h.c;
-          MessagerGUI m = new MessagerGUI(c);
+          ArrayList<String> t;
+          user = temp_h.getUser();
+          m = new MessagerGUI(c,temp_h.getUser(),socket,q);
           if(temp_h.getUser() != null){
               User temp_user = temp_h.getUser();
               ArrayList<Integer> roomlist  = temp_user.roomlist;
@@ -169,7 +175,25 @@ public class LoginFrame extends javax.swing.JFrame implements Runnable{
         }else if(temp_h.getType() == Command.FAILURE_REG){
           Warning w = new Warning("Someone else use the same info, please try again.");
           w.setVisible(true);
+        }else if(temp_h.getType() == Command.SEND_MSG){
+            System.out.println("SEND_MSG");
+            //
+            q.add(temp_h);
+            m.getMessage();
+
+        }else if(temp_h.getType() == Command.MSG_SYNC){
+            q.add(temp_h);           
+            m.getMessage();            
         }
+        /*else if(temp_h.getType() == Command.SEND_FILE){
+            System.out.println("SEND_FILE");
+            //
+            Curinfo c = temp_h.c;
+     //       SingleChat nowRoom = c.getRoom();
+            // add addFile API
+            return;
+        }*/
+        return;
     }
     private void SignupButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:

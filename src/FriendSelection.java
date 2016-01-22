@@ -41,7 +41,7 @@ public class FriendSelection extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jList1);
 
-        SureButton.setText("Sure");
+        SureButton.setText("Start chatroom");
         SureButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SureButtonActionPerformed(evt);
@@ -82,6 +82,9 @@ public class FriendSelection extends javax.swing.JFrame {
 
     private void SureButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
+        MultipleChat s = new MultipleChat();
+    //    s.setTitle(jList1.getSelectedValues());
+        s.setVisible(true);
     }
 
     /**

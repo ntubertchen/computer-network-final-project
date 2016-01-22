@@ -25,7 +25,7 @@ class Client{
         l.setSocket(socket);
         l.setqueue(queue);
         l.run();
-        while(true){
+        while(socket.isClosed() == false){
             ObjectInputStream inputstream;
             Header temp_h = new Header();
             try{

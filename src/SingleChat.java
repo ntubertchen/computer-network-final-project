@@ -1,6 +1,11 @@
 import java.net.Socket;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+import java.util.*;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -11,18 +16,26 @@ import java.io.IOException;
  *
  * @author yuchiang
  */
-public class SingleChat extends javax.swing.JFrame {
-    Socket socket;
-    User user;
+public class SingleChat extends javax.swing.JFrame implements Runnable{
+    static Socket socket;
+    static User user;
     String subject;
+    static ConcurrentLinkedQueue<Header> i;
     /**
      * Creates new form MessagerGUI
      */
-    public SingleChat() {
+    public SingleChat(User user,Socket socket,ConcurrentLinkedQueue<Header> i) {
+        this.user = user;
+        this.socket = socket;
+        this.i = i;
         initComponents();
     }
 
-    public void addMessageToScreen(String sender, String content){
+    public void addMessageToScreen(){
+        Header t = i.poll();
+        String sender,content;
+        sender = t.getOwner();
+        content = t.getMsg();
         MessageView.append(sender + ": " + content + "\n") ;
     }
     /**
@@ -39,7 +52,7 @@ public class SingleChat extends javax.swing.JFrame {
         MessageView = new javax.swing.JTextArea();
         SendButton = new javax.swing.JButton();
         NewFileButton = new javax.swing.JButton();
-        HistoryButton = new javax.swing.JButton();
+        ChatroomButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Messenger");
@@ -71,10 +84,10 @@ public class SingleChat extends javax.swing.JFrame {
             }
         });
 
-        HistoryButton.setText("History");
-        HistoryButton.addActionListener(new java.awt.event.ActionListener() {
+        ChatroomButton.setText("History");
+        ChatroomButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                HistoryButtonActionPerformed(evt);
+                ChatroomButtonActionPerformed(evt);
             }
         });
 
@@ -92,7 +105,7 @@ public class SingleChat extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(NewFileButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(HistoryButton))
+                        .addComponent(ChatroomButton))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)))
@@ -106,7 +119,7 @@ public class SingleChat extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(NewFileButton)
-                    .addComponent(HistoryButton))
+                    .addComponent(ChatroomButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TypeField, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -123,6 +136,7 @@ public class SingleChat extends javax.swing.JFrame {
         h.setType(Command.SEND_MSG);
         h.setUser(this.user);
         h.setReceiver(subject);
+        System.out.println(subject);
         h.setOwner(this.user.getUsername());
         String msg = TypeField.getText();
         h.setMsg(msg);
@@ -132,7 +146,7 @@ public class SingleChat extends javax.swing.JFrame {
         }catch(IOException chats){
             System.out.println("client send button fail");
         }
-        MessageView.append( msg + "\n") ;
+        MessageView.append(this.user.getUsername()+":"+ msg + "\n") ;
         TypeField.setText("");
     }
 
@@ -142,25 +156,39 @@ public class SingleChat extends javax.swing.JFrame {
 
     private void NewFileButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-        SelectFiles s = new SelectFiles();
-        s.setVisible(true);
+        JFrame f = new JFrame("");
+        SelectFiles panel = new SelectFiles();
+        String path = panel.getFilePath();
+        f.addWindowListener(
+            new WindowAdapter(){
+                public void windowClosing(WindowEvent e) {
+                    System.exit(0);
+                    }
+                }
+            );
+        f.getContentPane().add(panel,"Center");
+        f.setSize(panel.getPreferredSize());
+        f.setVisible(true);
+      
+      
     }
 
-    private void HistoryButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void ChatroomButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-        History s = new History();
-        s.setVisible(true);
+        Header h = new Header();
+        h.setType(Command.MSG_SYNC);
+        h.setUser(this.user);
+        h.setOwner(this.user.getUsername());
+        String msg = TypeField.getText();
+        try{
+            ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());
+            objectOutput.writeObject(h);
+        }catch(IOException chats){
+            System.out.println("client send button fail");
+        }
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
+    public void run() {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -177,18 +205,13 @@ public class SingleChat extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MessagerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SingleChat().setVisible(true);
-            }
-        });
     }
+    /**
+     * @param args the command line arguments
+     */
 
     // Variables declaration - do not modify
-    private javax.swing.JButton HistoryButton;
+    private javax.swing.JButton ChatroomButton;
     private javax.swing.JTextArea MessageView;
     private javax.swing.JButton NewFileButton;
     private javax.swing.JButton SendButton;
