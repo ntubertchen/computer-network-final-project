@@ -43,6 +43,7 @@ public class RequestThread extends Thread{
 							temp_h = (Header) inputstream.readObject();
 							ObjectOutputStream objectOutput;
 							if(temp_h.getType() == Command.REGISTER){
+								System.out.println("reg");
 								if(userData.containsKey(temp_h.getOwner()) == true){//re no
 									try{
 										Header failure = new Header();
@@ -53,11 +54,10 @@ public class RequestThread extends Thread{
 								}else{
 									User temp_user = temp_h.getUser();
 									userData.put(temp_user.getUsername(),new User(temp_user.getUsername(),temp_user.getUserpassword()));
-									if(userData.containsKey("123") == true)
-										System.out.println("success put");
 									try{
 										Header success = new Header();
 										success.setType(Command.SUCCESS_REG);
+										System.out.println(success.getType());
 										success.setUser(temp_user);
 										objectOutput = new ObjectOutputStream(socket.getOutputStream());
 										objectOutput.writeObject(success);
@@ -65,13 +65,7 @@ public class RequestThread extends Thread{
 								}
 							}else if(temp_h.getType() == Command.LOGIN){
 								User u = temp_h.getUser();
-								User k = userData.get(temp_h.getOwner());
-								String tempn,tempu,n,un;
-								n = u.getUsername();
-								un = u.getUserpassword();
-								tempn = k.getUsername();
-								tempu = k.getUserpassword();
-								if(userData.containsKey(temp_h.getOwner()) == true && tempu.equals(un) == true){
+								if(userData.containsKey(temp_h.getOwner()) == true && u.check(userData.get(temp_h.getOwner())) == true){
 									try{
 										//return user data
 										Header success = new Header();
@@ -104,7 +98,7 @@ public class RequestThread extends Thread{
 										objectOutput.writeObject(failure);
 									}catch(IOException log){}
 								}
-							}else if(temp_h.getType() == Command.SEND_MSG){
+							}else if(temp_h.getType() == Command.SEND_MSG){//msg use receiver
 								if(socket_map.containsKey(temp_h.getReceiver()) == true){
 									temp_socket = socket_map.get(temp_h.getReceiver());
 									if(temp_socket.isClosed() == false){
@@ -112,29 +106,29 @@ public class RequestThread extends Thread{
 											objectOutput = new ObjectOutputStream(temp_socket.getOutputStream());
 											objectOutput.writeObject(temp_h);
 										}catch(IOException msg){}
-										Header success = new Header();
-										success.setType(Command.SUCCESS_MSG);
-										try{
-											objectOutput = new ObjectOutputStream(socket.getOutputStream());
-											objectOutput.writeObject(success);
-										}catch(IOException msgacks){}
+//										Header success = new Header();
+//										success.setType(Command.SUCCESS_MSG);
+//										try{
+//											objectOutput = new ObjectOutputStream(socket.getOutputStream());
+//											objectOutput.writeObject(success);
+//										}catch(IOException msgacks){}
 									}else{
-										Header failure = new Header();
-										failure.setType(Command.FAILURE_MSG);
-										try{
-											objectOutput = new ObjectOutputStream(socket.getOutputStream());
-											objectOutput.writeObject(failure);
-										}catch(IOException msgack){}
+//										Header failure = new Header();
+//										failure.setType(Command.FAILURE_MSG);
+//										try{
+//											objectOutput = new ObjectOutputStream(socket.getOutputStream());
+//											objectOutput.writeObject(failure);
+//										}catch(IOException msgack){}
 									}
 									temp_list = dataQueue.get(0);
 									temp_list.add(temp_h);
 								}else{
-									Header failure = new Header();
-									failure.setType(Command.NOSUCHUSER);
-									try{
-										objectOutput = new ObjectOutputStream(socket.getOutputStream());
-										objectOutput.writeObject(failure);
-									}catch(IOException msgnouser){}
+//									Header failure = new Header();
+//									failure.setType(Command.NOSUCHUSER);
+//									try{
+//										objectOutput = new ObjectOutputStream(socket.getOutputStream());
+//										objectOutput.writeObject(failure);
+//									}catch(IOException msgnouser){}
 								}
 							}else if(temp_h.getType() == Command.SEND_MSG_CHAT){
 								ArrayList<String> chat_user;
