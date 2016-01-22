@@ -1,6 +1,7 @@
 import java.net.Socket;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
@@ -15,20 +16,26 @@ import java.util.*;
  *
  * @author yuchiang
  */
-public class SingleChat extends javax.swing.JFrame {
+public class SingleChat extends javax.swing.JFrame implements Runnable{
     static Socket socket;
     static User user;
     String subject;
+    static ConcurrentLinkedQueue<Header> i;
     /**
      * Creates new form MessagerGUI
      */
-    public SingleChat(User user,Socket socket) {
+    public SingleChat(User user,Socket socket,ConcurrentLinkedQueue<Header> i) {
         this.user = user;
         this.socket = socket;
+        this.i = i;
         initComponents();
     }
 
-    public void addMessageToScreen(String sender, String content){
+    public void addMessageToScreen(){
+        Header t = i.poll();
+        String sender,content;
+        sender = t.getOwner();
+        content = t.getMsg();
         MessageView.append(sender + ": " + content + "\n") ;
     }
     /**
@@ -129,6 +136,7 @@ public class SingleChat extends javax.swing.JFrame {
         h.setType(Command.SEND_MSG);
         h.setUser(this.user);
         h.setReceiver(subject);
+        System.out.println(subject);
         h.setOwner(this.user.getUsername());
         String msg = TypeField.getText();
         h.setMsg(msg);
@@ -138,7 +146,7 @@ public class SingleChat extends javax.swing.JFrame {
         }catch(IOException chats){
             System.out.println("client send button fail");
         }
-        MessageView.append( msg + "\n") ;
+        MessageView.append(this.user.getUsername()+":"+ msg + "\n") ;
         TypeField.setText("");
     }
 
@@ -180,15 +188,7 @@ public class SingleChat extends javax.swing.JFrame {
         }
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
+    public void run() {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -205,15 +205,10 @@ public class SingleChat extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MessagerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SingleChat(null,null).setVisible(true);
-            }
-        });
     }
+    /**
+     * @param args the command line arguments
+     */
 
     // Variables declaration - do not modify
     private javax.swing.JButton ChatroomButton;

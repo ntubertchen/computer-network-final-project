@@ -14,6 +14,7 @@ public class MultipleChat extends javax.swing.JFrame {
     Socket socket;
     User user;
     String subject;
+    
     /**
      * Creates new form MultipleChat
      */

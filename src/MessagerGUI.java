@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import java.net.Socket;
+import java.net.Socket; 
 import java.util.*;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.swing.JList;
+import java.util.concurrent.ConcurrentHashMap;
 /**
  *
  * @author yuchiang
@@ -14,15 +16,19 @@ import javax.swing.JList;
 public class MessagerGUI extends javax.swing.JFrame {
     static User user;
     static Socket socket;
+    static ConcurrentLinkedQueue<Header> q;
+    static ConcurrentLinkedQueue<Header> i;
     /**
      * Creates new form MessagerGUI
      */
-    private HashMap<String , SingleChat> chatMap;
-    public MessagerGUI(Curinfo c,User user,Socket socket) {
+    private ConcurrentHashMap<String , SingleChat> chatMap;
+    public MessagerGUI(Curinfo c,User user,Socket socket,ConcurrentLinkedQueue<Header> q) {
         initComponents(c);
         this.socket = socket;
+        this.i = new ConcurrentLinkedQueue<Header>();
+        this.q = q;
         this.user = user;
-        chatMap = new HashMap<String , SingleChat>();
+        chatMap = new ConcurrentHashMap<String , SingleChat>();
     }
 
     
@@ -168,15 +174,25 @@ public class MessagerGUI extends javax.swing.JFrame {
                 onlineButton.setEnabled(true);
             }
         // }
-        SingleChat s = new SingleChat(this.user,socket);
+        SingleChat s = new SingleChat(this.user,socket,i);
+        s.setVisible(true);
+        s.run();
+        s.subject = onlineList.getSelectedValue();
         s.setTitle(onlineList.getSelectedValue());
         chatMap.put(onlineList.getSelectedValue(), s);
-        s.setVisible(true);
     }                                               
-    public void getMessage(String username,String msg){
-        SingleChat temp_chat = new SingleChat(null,null);
-        temp_chat = chatMap.get(username);
-        temp_chat.addMessageToScreen(username,msg);
+    public void getMessage(){
+        Header t = q.poll();
+        String username, msg;
+        username = t.getOwner();
+        msg = t.getMsg();
+        System.out.println("own"+username);
+        SingleChat temp_chat = new SingleChat(null,null,null);
+        if(chatMap.containsKey(username) == true){
+            temp_chat = chatMap.get(username);
+            i.add(t);
+            temp_chat.addMessageToScreen();
+        }
     }
 
     private void onlineListValueChanged(javax.swing.event.ListSelectionEvent evt) {                                        
